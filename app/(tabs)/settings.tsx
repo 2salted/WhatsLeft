@@ -1,10 +1,24 @@
-import { View, Text } from 'react-native';
+import React from "react";
+import { SafeAreaView, Text, StyleSheet, View, Button } from "react-native";
+import { useAuth } from "@clerk/clerk-expo";
 
-export default function Tab() {
+export default function settings() {
+  const { isLoaded, signOut } = useAuth();
+  if (!isLoaded) {
+    return null;
+  }
   return (
-    <View style={{ backgroundColor: 'black', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <Text>Settings</Text>
-    </View>
+    <SafeAreaView style={{
+      flex: 1,
+      backgroundColor: 'black'
+    }}>
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          signOut();
+        }}
+      />
+    </SafeAreaView>
   );
-}
+};
 

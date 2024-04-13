@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
-import { Link } from "expo-router";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -36,7 +35,6 @@ export default function SignUpScreen() {
     }
   };
 
-  // This verifies the user using email code that is delivered.
   const onPressVerify = async () => {
     if (!isLoaded) {
       return;
@@ -62,6 +60,7 @@ export default function SignUpScreen() {
               autoCapitalize="none"
               value={firstName}
               placeholder="First Name..."
+              placeholderTextColor="#d3d3d3"
               onChangeText={(firstName) => setFirstName(firstName)}
             />
           </View>
@@ -70,6 +69,7 @@ export default function SignUpScreen() {
               autoCapitalize="none"
               value={lastName}
               placeholder="Last Name..."
+              placeholderTextColor="#d3d3d3"
               onChangeText={(lastName) => setLastName(lastName)}
             />
           </View>
@@ -78,22 +78,22 @@ export default function SignUpScreen() {
               autoCapitalize="none"
               value={emailAddress}
               placeholder="Email..."
+              placeholderTextColor="#d3d3d3"
               onChangeText={(email) => setEmailAddress(email)}
             />
           </View>
-
           <View>
             <TextInput
               value={password}
               placeholder="Password..."
-              placeholderTextColor="#000"
+              placeholderTextColor="#d3d3d3"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
             />
           </View>
 
           <TouchableOpacity onPress={onSignUpPress}>
-            <Text>Sign up</Text>
+            <Text style={{ color: 'white' }}>Sign up</Text>
           </TouchableOpacity>
         </View>
       )}
