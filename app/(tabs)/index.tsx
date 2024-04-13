@@ -1,5 +1,5 @@
 import { useAuth } from '@clerk/clerk-expo';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 
 export default function Tab() {
   const { isLoaded, userId, sessionId, getToken } = useAuth();
@@ -8,8 +8,17 @@ export default function Tab() {
   }
 
   return (
-    <Text>
-      Hello, {userId} your current active session is {sessionId}
-    </Text>
+    <SafeAreaView style={{
+      flex: 1,
+      backgroundColor: 'black'
+    }}>
+      <View>
+        <Text style={{
+          color: 'white'
+        }}>
+          Hello, {userId} your current active session is {sessionId}
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 }

@@ -4,20 +4,21 @@ import { SafeAreaView } from 'react-native';
 const clerkApiKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 import React from "react";
 import SignUpScreen from '@/components/SignUpScreen';
+import SignInScreen from '@/components/SignInScreen';
 
 export default function AppLayout() {
   return (
     <ClerkProvider publishableKey={clerkApiKey!}>
-      <SafeAreaView>
-        <SignedIn>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </SignedIn>
-        <SignedOut>
-          <SignUpScreen />
-        </SignedOut>
-      </SafeAreaView>
+      <SignedIn>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </SignedIn>
+      <SignedOut>
+        <SafeAreaView>
+          <SignInScreen />
+        </SafeAreaView>
+      </SignedOut>
     </ClerkProvider>
   );
 }
