@@ -34,9 +34,7 @@ export default function AppLayout() {
         </Stack>
       </SignedIn>
       <SignedOut>
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
-          <SignUpScreen />
-        </SafeAreaView>
+        <SignUpScreen />
       </SignedOut>
     </ClerkProvider>
   );
