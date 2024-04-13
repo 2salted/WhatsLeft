@@ -50,12 +50,8 @@ export default function SignUpScreen() {
       console.error(JSON.stringify(err, null, 2));
     }
   };
-
   return (
-    <SafeAreaView style={{
-      flex: 1, backgroundColor: 'black',
-      alignItems: "center"
-    }}>
+    <SafeAreaView className="flex-1 bg-black">
       {!pendingVerification && (
         <View>
           <View>
