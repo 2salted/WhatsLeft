@@ -51,29 +51,39 @@ export default function SignUpScreen() {
     }
   };
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1 bg-black items-center">
       {!pendingVerification && (
-        <View>
-          <View>
-            <TextInput
-              autoCapitalize="none"
-              value={firstName}
-              placeholder="First Name..."
-              placeholderTextColor="#d3d3d3"
-              onChangeText={(firstName) => setFirstName(firstName)}
-            />
+        <View className="w-11/12">
+          <Text className="text-white text-4xl font-bold pt-12 pb-5">Sign Up</Text>
+          <View className="flex-row w-full">
+            <View className="py-3 pr-2 w-2/4">
+              <TextInput
+                className="bg-zinc-700 px-2 py-3 text-base rounded-xl
+              leading-5 text-white"
+                autoCapitalize="none"
+                value={firstName}
+                placeholder="First Name"
+                placeholderTextColor="#d3d3d3"
+                onChangeText={(firstName) => setFirstName(firstName)}
+              />
+            </View>
+            <View className="py-3 pl-2 w-2/4">
+              <TextInput
+                className="bg-zinc-700 px-2 py-3 text-base rounded-xl
+               leading-5 text-white"
+                autoCapitalize="none"
+                value={lastName}
+                placeholder="Last Name..."
+                placeholderTextColor="#d3d3d3"
+                onChangeText={(lastName) => setLastName(lastName)}
+              />
+            </View>
+
           </View>
-          <View>
+          <View className="py-3">
             <TextInput
-              autoCapitalize="none"
-              value={lastName}
-              placeholder="Last Name..."
-              placeholderTextColor="#d3d3d3"
-              onChangeText={(lastName) => setLastName(lastName)}
-            />
-          </View>
-          <View>
-            <TextInput
+              className="bg-zinc-700 px-2 py-3 text-base rounded-xl
+              leading-5 text-white"
               autoCapitalize="none"
               value={emailAddress}
               placeholder="Email..."
@@ -81,8 +91,10 @@ export default function SignUpScreen() {
               onChangeText={(email) => setEmailAddress(email)}
             />
           </View>
-          <View>
+          <View className="py-3">
             <TextInput
+              className="bg-zinc-700 px-2 py-3 text-base rounded-xl
+              leading-5 text-white"
               value={password}
               placeholder="Password..."
               placeholderTextColor="#d3d3d3"
@@ -90,10 +102,11 @@ export default function SignUpScreen() {
               onChangeText={(password) => setPassword(password)}
             />
           </View>
-
-          <TouchableOpacity onPress={onSignUpPress}>
-            <Text style={{ color: 'white' }}>Sign up</Text>
-          </TouchableOpacity>
+          <View className="items-end p-2">
+            <TouchableOpacity onPress={onSignUpPress} className="px-2">
+              <Text className="text-blue-500 font-bold text-lg">Next</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       {pendingVerification && (
