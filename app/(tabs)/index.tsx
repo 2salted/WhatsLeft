@@ -13,9 +13,7 @@ export default function Tab() {
       backgroundColor: 'black'
     }}>
       <View>
-        <Text style={{
-          color: 'white'
-        }}>
+        <Text className='text-white'>
           Hello, {userId} your current active session is {sessionId}
         </Text>
       </View>
