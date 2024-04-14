@@ -1,8 +1,8 @@
 import * as React from "react";
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ setTest }: any) {
   const { isLoaded, signUp, setActive } = useSignUp();
 
   const [firstName, setFirstName] = React.useState("");
@@ -108,24 +108,34 @@ export default function SignUpScreen() {
             </TouchableOpacity>
           </View>
           <View className="items-center justify-end h-2/5" >
-            <Text className="text-white">Already a user?</Text>
+            <Text className="text-white pb-2">Already a user?</Text>
+            <Pressable onPress={() => {
+              setTest(true)
+            }}>
+              <Text className="text-white">Sign In</Text>
+            </Pressable>
           </View>
         </View >
       )
       }
       {
         pendingVerification && (
-          <View>
-            <View>
+          <View className="w-11/12">
+            <Text className="text-white text-4xl font-bold pt-12 pb-5">Verification Code</Text>
+            <View className="w-full">
               <TextInput
+                className="w-full bg-zinc-700 px-2 py-3 text-base rounded-xl
+                leading-5 text-white"
                 value={code}
-                placeholder="Code..."
+                placeholder="Enter verification code"
                 onChangeText={(code) => setCode(code)}
               />
             </View>
-            <TouchableOpacity onPress={onPressVerify}>
-              <Text>Verify Email</Text>
-            </TouchableOpacity>
+            <View className="items-end p-2">
+              <TouchableOpacity onPress={onPressVerify} className="px-2 py-2">
+                <Text className="text-blue-500 font-bold text-lg">Verify Code</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )
       }
