@@ -8,14 +8,9 @@ export default function Tab() {
   }
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      backgroundColor: 'black'
-    }}>
+    <SafeAreaView className='flex-1 bg-black'>
       <View>
-        <Text className='text-white'>
-          Hello, {userId} your current active session is {sessionId}
-        </Text>
+        <Text className='text-gray-50'>Chats</Text>
       </View>
     </SafeAreaView>
   );

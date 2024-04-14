@@ -51,7 +51,6 @@ export default function SignInScreen({ setTest }: any) {
           />
         </View>
 
-
         <View className="justify-between py-2 flex-row">
           <TouchableOpacity className="px-3" onPress={() => { setTest(false) }}>
             <Text className="text-blue-500 font-bold text-lg">Back</Text>
