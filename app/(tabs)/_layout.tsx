@@ -1,10 +1,13 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
+import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{
+      headerTitleStyle: { color: 'white' },
+      headerTitle: '',
       headerShadowVisible: false,
       headerStyle: {
         backgroundColor: 'black',

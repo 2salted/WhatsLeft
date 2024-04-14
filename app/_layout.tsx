@@ -5,6 +5,7 @@ import React from "react";
 import SignUpScreen from '@/components/SignUpScreen';
 import SignInScreen from '../components/SignInScreen';
 import * as SecureStore from "expo-secure-store";
+import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 
 export default function AppLayout() {
   const [test, setTest] = React.useState(false);
@@ -27,6 +28,7 @@ export default function AppLayout() {
   };
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={clerkApiKey!}>
+      <ExpoStatusBar hidden={false} translucent={false} style="light" />
       <SignedIn>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
