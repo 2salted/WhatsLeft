@@ -107,22 +107,28 @@ export default function SignUpScreen() {
               <Text className="text-blue-500 font-bold text-lg">Next</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      )}
-      {pendingVerification && (
-        <View>
-          <View>
-            <TextInput
-              value={code}
-              placeholder="Code..."
-              onChangeText={(code) => setCode(code)}
-            />
+          <View className="items-center justify-end h-2/5" >
+            <Text className="text-white">Already a user?</Text>
           </View>
-          <TouchableOpacity onPress={onPressVerify}>
-            <Text>Verify Email</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </SafeAreaView>
+        </View >
+      )
+      }
+      {
+        pendingVerification && (
+          <View>
+            <View>
+              <TextInput
+                value={code}
+                placeholder="Code..."
+                onChangeText={(code) => setCode(code)}
+              />
+            </View>
+            <TouchableOpacity onPress={onPressVerify}>
+              <Text>Verify Email</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+    </SafeAreaView >
   );
 }
