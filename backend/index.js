@@ -30,7 +30,7 @@ async function main() {
   })
   await createUser(client,
     {
-      user: "salted",
+      user: "JOEBIDEN",
     }
   );
   async function createUser(client, newUser) {
