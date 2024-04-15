@@ -1,5 +1,5 @@
 import { useAuth } from '@clerk/clerk-expo';
-import { Stack } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 import { View, Text, SafeAreaView } from 'react-native';
 
 export default function Tab() {
@@ -17,7 +17,8 @@ export default function Tab() {
         }}
       />
       <View>
-        <Text className='text-gray-50 text-4xl font-bold px-3'>Chats</Text>
+        <Text className='text-gray-50 text-4xl font-bold px-5'>Chats</Text>
+        <Link href="/addUserModal" className='text-gray-50'>Present modal</Link>
       </View>
     </SafeAreaView>
   );

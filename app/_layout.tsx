@@ -32,6 +32,13 @@ export default function AppLayout() {
       <SignedIn>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="addUserModal"
+            options={{
+              // Set the presentation mode to modal for our modal route.
+              presentation: 'modal',
+            }}
+          />
         </Stack>
       </SignedIn>
       <SignedOut>

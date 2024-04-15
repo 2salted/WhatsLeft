@@ -1,7 +1,9 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import { Link, Tabs } from 'expo-router';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
+import { Stack } from 'expo-router';
+import { Pressable } from 'react-native';
 
 export default function TabLayout() {
   return (
@@ -30,6 +32,17 @@ export default function TabLayout() {
         options={{
           title: 'Chats',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="comments" color={color} />,
+          headerRight: () => (
+            <Link href="/addUserModal" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome name='plus-circle' size={30} style={{
+                    color: 'white', marginRight: 20, opacity: pressed ? 0.4 : 1
+                  }} />
+                )}
+              </Pressable>
+            </Link>
+          )
         }}
       />
       <Tabs.Screen
