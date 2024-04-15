@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 export default function addUserModal() {
   const isPresented = router.canGoBack();
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View className='flex-1 bg-[#1e1e1e]'>
       { /*!*/isPresented && <Link href="../">Dismiss</Link>}
       <StatusBar style="light" />
     </View>

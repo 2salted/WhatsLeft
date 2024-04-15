@@ -36,6 +36,7 @@ export default function SignInScreen({ setTest }: any) {
             autoCapitalize="none"
             value={emailAddress}
             placeholder="Email..."
+            placeholderTextColor="#d3d3d3"
             onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
           />
         </View>
@@ -46,6 +47,7 @@ export default function SignInScreen({ setTest }: any) {
             leading-5 text-white"
             value={password}
             placeholder="Password..."
+            placeholderTextColor="#d3d3d3"
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
           />

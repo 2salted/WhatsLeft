@@ -35,8 +35,13 @@ export default function AppLayout() {
           <Stack.Screen
             name="addUserModal"
             options={{
-              // Set the presentation mode to modal for our modal route.
               presentation: 'modal',
+              headerTitle: "New Message",
+              headerTitleStyle: { color: 'white' },
+              headerShadowVisible: false,
+              headerStyle: {
+                backgroundColor: '#1e1e1e'
+              }
             }}
           />
         </Stack>
