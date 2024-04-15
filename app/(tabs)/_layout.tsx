@@ -32,6 +32,15 @@ export default function TabLayout() {
         options={{
           title: 'Chats',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="comments" color={color} />,
+          headerLeft: () => (
+            <Pressable>
+              {({ pressed }) => (
+                <FontAwesome name='ellipsis-h' size={30} style={{
+                  color: 'white', marginLeft: 20, opacity: pressed ? 0.4 : 1
+                }} />
+              )}
+            </Pressable>
+          ),
           headerRight: () => (
             <Link href="/addUserModal" asChild>
               <Pressable>
