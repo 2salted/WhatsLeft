@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View, useAnimatedValue } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 
 export default function SignUpScreen({ setTest }: any) {
@@ -43,7 +43,6 @@ export default function SignUpScreen({ setTest }: any) {
       });
 
       await setActive({ session: completeSignUp.createdSessionId });
-
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
     }
