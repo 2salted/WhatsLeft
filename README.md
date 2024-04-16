@@ -9,3 +9,4 @@ The development stack used to make this project was:
 * [Clerk](https://clerk.com/) for user authentication<br>
 * [MongoDB](https://www.mongodb.com/) for database<br>
 * [ExpressJS](https://expressjs.com/) for backend framework<br>
+* [Github](https://github.com/) for version control<br>
