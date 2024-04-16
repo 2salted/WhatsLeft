@@ -16,7 +16,6 @@ const app = express()
 app.use(express.json())
 const port = 3000
 app.post('/user', async (req, res) => {
-  console.log(req)
   await createUser(client, { name: req.body.name, clerkId: req.body.clerkId })
   res.send({ success: true })
 })

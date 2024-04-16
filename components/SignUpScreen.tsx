@@ -24,18 +24,15 @@ export default function SignUpScreen({ setTest }: any) {
         emailAddress,
         password,
       });
-
       // send the email.
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
       // change the UI to our pending section.
       setPendingVerification(true);
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
     }
   };
-
-  const onPressVerify = async () => {
+  const onPressVerify = async (e: any) => {
     if (!isLoaded) {
       return;
     }
@@ -46,6 +43,7 @@ export default function SignUpScreen({ setTest }: any) {
       });
 
       await setActive({ session: completeSignUp.createdSessionId });
+
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
     }
