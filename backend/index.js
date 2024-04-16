@@ -15,8 +15,25 @@ const client = new MongoClient(uri, {
 const app = express()
 app.use(express.json())
 const port = 3000
+app.get('/:clerkId', async (req, res) => {
+  try {
+    const { clerkId } = req.params;
+    const user = await client.db("whatsleft").collection("users").findOne({ clerkId });
+    if (user) {
+      res.json({ exists: true });
+    } else {
+      res.json({ exists: false });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.post('/user', async (req, res) => {
-  await createUser(client, { name: req.body.name, clerkId: req.body.clerkId })
+  await createUser(client, {
+    firstName: req.body.firstName, lastName: req.body.lastName,
+    clerkId: req.body.clerkId
+  })
   res.send({ success: true })
 })
 async function createUser(client, newUser) {
