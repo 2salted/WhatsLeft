@@ -3,7 +3,8 @@ WhatsLeft is a messaging app similar to WhatsApp and Signal made to chat with yo
 
 ## How I built it
 The development stack used to make this project was:
-(file:///home/salted/Downloads/image_123986672%20(1).JPG)
+<img src="/home/salted/Downloads/image_123986672%20(1).JPG" />
+
 
 * [React Native](https://reactnative.dev/) for the frontend <br>
 * [Native Wind](https://www.nativewind.dev/) for CSS styling<br>
