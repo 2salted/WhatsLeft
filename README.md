@@ -1,6 +1,7 @@
 # WhatsLeft
 WhatsLeft is a messaging app similar to WhatsApp and Signal made to chat with your friends and family! WhatsLeft was made using the React Native framework in (Expo) and is tailored to IOS and Android only (WhatsLeft is not available on web).
 
+![signup](images/img1.JPG)
 
 ## How I built it
 The development stack used to make this project was:
