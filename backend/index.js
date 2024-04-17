@@ -12,9 +12,20 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
 const app = express()
 app.use(express.json())
 const port = 3000
+
+app.get('/search', async (req, res) => {
+  try {
+    const searchResult = await client.db("whatsleft").collection("users").find().toArray();
+    res.json(searchResult);
+  } catch (err) {
+    console.error("Error searching for users:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.get('/:clerkId', async (req, res) => {
   try {
@@ -38,6 +49,7 @@ app.post('/user', async (req, res) => {
   })
   res.send({ success: true })
 })
+
 async function createUser(client, newUser) {
   const result = await client.db("whatsleft").collection("users").insertOne(newUser);
   console.log(`New user created with the following id: ${result.insertedId}`);
