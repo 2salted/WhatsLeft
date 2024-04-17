@@ -124,6 +124,7 @@ export default function SignUpScreen({ setTest }: any) {
                 className="w-full bg-zinc-700 px-2 py-3 text-base rounded-xl
                 leading-5 text-white"
                 value={code}
+                placeholderTextColor="#d3d3d3"
                 placeholder="Enter verification code"
                 onChangeText={(code) => setCode(code)}
               />
