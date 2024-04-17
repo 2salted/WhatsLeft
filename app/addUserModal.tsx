@@ -1,6 +1,7 @@
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@clerk/clerk-expo';
 
 type User = {
   firstName: string,
@@ -12,6 +13,7 @@ export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const { userId } = useAuth();
 
   async function fetchUsers() {
     try {
@@ -31,7 +33,7 @@ export default function addUserModal() {
   useEffect(() => {
     fetchUsers()
       .then(users => {
-        setUsersData(users)
+        setUsersData(users.filter((user: any) => user.clerkId !== userId))
         setShowSpinner(false)
       })
       .catch(error => {
