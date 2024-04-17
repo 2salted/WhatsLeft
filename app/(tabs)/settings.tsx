@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, Text, StyleSheet, View, Button } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, Button, Pressable } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
 
 export default function settings() {
@@ -12,12 +12,12 @@ export default function settings() {
       flex: 1,
       backgroundColor: 'black'
     }}>
-      <Button
-        title="Sign Out"
+      <Pressable
         onPress={() => {
           signOut();
-        }}
-      />
+        }}>
+        <Text className="text-white">Sign Out</Text>
+      </Pressable>
     </SafeAreaView>
   );
 };

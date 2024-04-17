@@ -6,6 +6,9 @@ import SignUpScreen from '@/components/SignUpScreen';
 import SignInScreen from '../components/SignInScreen';
 import * as SecureStore from "expo-secure-store";
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
+import { Pressable, Text, View } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
 export default function AppLayout() {
   const [test, setTest] = React.useState(false);
@@ -29,6 +32,7 @@ export default function AppLayout() {
     <ClerkProvider tokenCache={tokenCache} publishableKey={clerkApiKey!}>
       <ExpoStatusBar hidden={false} translucent={false} style="light" />
       <SignedIn>
+        <ExpoStatusBar style='light' hidden={false} />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
@@ -38,6 +42,18 @@ export default function AppLayout() {
               headerTitle: "New Message",
               headerTitleStyle: { color: 'white' },
               headerShadowVisible: false,
+              headerLeft: () => (
+                <View>
+                </View>
+              ),
+              headerRight: () => (
+                <View>
+                  <Link href="../">
+                    <FontAwesome name='close'
+                      size={20} style={{ color: 'white' }} />
+                  </Link>
+                </View>
+              ),
               headerStyle: {
                 backgroundColor: '#1e1e1e'
               }
@@ -46,6 +62,7 @@ export default function AppLayout() {
         </Stack>
       </SignedIn>
       <SignedOut>
+        <ExpoStatusBar style='light' hidden={false} />
         {
           test === false ?
             <SignUpScreen setTest={setTest} />
