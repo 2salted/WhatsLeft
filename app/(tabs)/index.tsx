@@ -4,12 +4,13 @@ import { useEffect } from 'react';
 import { Text, SafeAreaView, ScrollView } from 'react-native';
 
 export default function Tab() {
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const { isLoaded, userId, sessionId } = useAuth();
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
     return null;
   }
+
   const checkClerkIdExists = async (clerkId: string) => {
     try {
       const response = await fetch(`http://192.168.0.148:3000/${clerkId}`);
