@@ -1,7 +1,7 @@
 import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import { useEffect, useState } from 'react';
-import { useAuth } from '@clerk/clerk-expo';
+import { useAuth, useUser } from '@clerk/clerk-expo';
 
 type User = {
   firstName: string,
@@ -13,9 +13,11 @@ export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [convos, setConvos] = useState<object[]>()
   const { userId } = useAuth();
+  const { user } = useUser();
 
-  async function createNewConvo(secondUserState: string) {
+  async function createNewConvo(secondUserState: string, secondUserName: string) {
     try {
       fetch('http://192.168.0.148:3000/createConvo', {
         method: 'POST',
@@ -25,6 +27,8 @@ export default function addUserModal() {
         body: JSON.stringify({
           firstUser: userId,
           secondUser: secondUserState,
+          firstUserName: user?.firstName,
+          secondUserName: secondUserName,
         })
       }).then(response => response.json())
         .then(data => {
@@ -37,6 +41,18 @@ export default function addUserModal() {
       console.error('Error:', error);
     }
   };
+
+  async function fetchConvo() {
+    try {
+      setShowSpinner(true)
+      const response = await fetch('http://192.168.0.148:3000/convos')
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Error fetching users');
+      return []
+    }
+  }
 
   async function fetchUsers() {
     try {
@@ -52,8 +68,11 @@ export default function addUserModal() {
       return []
     }
   }
-
   useEffect(() => {
+    fetchConvo()
+      .then(conversations => {
+        setConvos(conversations.filter((convo: any) => convo.firstUser === userId))
+      })
     fetchUsers()
       .then(users => {
         setUsersData(users.filter((user: any) => user.clerkId !== userId))
@@ -63,6 +82,8 @@ export default function addUserModal() {
         console.error('Error fetching users:', error);
       });
   }, [searchUser])
+
+  console.log("conversations", convos)
 
   return (
     <SafeAreaView className='flex-1 bg-[#1e1e1e]'>
@@ -84,7 +105,7 @@ export default function addUserModal() {
               return (
                 <View key={index} className="py-3">
                   <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
-                    createNewConvo(user.clerkId)
+                    createNewConvo(user.clerkId, user.firstName)
                   }}>
                     <Text className='text-gray-50 text-base font-bold'>{user.firstName}</Text>
                   </TouchableOpacity>

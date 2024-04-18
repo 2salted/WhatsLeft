@@ -27,6 +27,17 @@ app.get('/search', async (req, res) => {
   }
 });
 
+app.get('/convos', async (req, res) => {
+  try {
+    const result = await client.db("whatsleft").collection("conversations").find().toArray()
+    console.log(result)
+    res.json(result)
+  } catch (err) {
+    console.error("error searching connnvos", err)
+    res.status(500).json({ error: "errorrrr" })
+  }
+})
+
 app.get('/:clerkId', async (req, res) => {
   try {
     const { clerkId } = req.params;
@@ -43,10 +54,9 @@ app.get('/:clerkId', async (req, res) => {
 });
 
 app.post('/createConvo', async (req, res) => {
-  const findConvo = client.db("whatsleft").collection("conversations").find()
-
   createConvo(client, {
-    firstUser: req.body.firstUser, secondUser: req.body.secondUser
+    firstUser: req.body.firstUser, secondUser: req.body.secondUser,
+    firstUserName: req.body.firstUserName, secondUserName: req.body.secondUserName
   })
   res.send({ success: "new convo created" })
 })
