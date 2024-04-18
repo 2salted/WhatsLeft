@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, Text, StyleSheet, View, Button, Pressable } from "react-native";
+import { SafeAreaView, Text, View, Pressable } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
 
 export default function settings() {
@@ -12,12 +12,15 @@ export default function settings() {
       flex: 1,
       backgroundColor: 'black'
     }}>
-      <Pressable
-        onPress={() => {
-          signOut();
-        }}>
-        <Text className="text-white">Sign Out</Text>
-      </Pressable>
+      <Text className='text-gray-50 text-4xl font-bold px-5'>Settings</Text>
+      <View className="items-center py-5">
+        <Pressable
+          onPress={() => {
+            signOut();
+          }}>
+          <Text className="text-white">Sign Out</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };

@@ -15,6 +15,29 @@ export default function addUserModal() {
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const { userId } = useAuth();
 
+  async function createNewConvo(secondUserState: string) {
+    try {
+      fetch('http://192.168.0.148:3000/createConvo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstUser: userId,
+          secondUser: secondUserState,
+        })
+      }).then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   async function fetchUsers() {
     try {
       setShowSpinner(true)
@@ -60,7 +83,9 @@ export default function addUserModal() {
             : usersData?.map((user, index) => {
               return (
                 <View key={index} className="py-3">
-                  <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row'>
+                  <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
+                    createNewConvo(user.clerkId)
+                  }}>
                     <Text className='text-gray-50 text-base font-bold'>{user.firstName}</Text>
                   </TouchableOpacity>
                 </View>

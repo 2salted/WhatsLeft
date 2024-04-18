@@ -42,12 +42,26 @@ app.get('/:clerkId', async (req, res) => {
   }
 });
 
+app.post('/createConvo', async (req, res) => {
+  const findConvo = client.db("whatsleft").collection("conversations").find()
+
+  createConvo(client, {
+    firstUser: req.body.firstUser, secondUser: req.body.secondUser
+  })
+  res.send({ success: "new convo created" })
+})
+
+async function createConvo(client, newConvo) {
+  const result = await client.db("whatsleft").collection("conversations").insertOne(newConvo);
+  console.log(`New convo created with the following id: ${result.insertedId}`);
+}
+
 app.post('/user', async (req, res) => {
   await createUser(client, {
     firstName: req.body.firstName, lastName: req.body.lastName,
     clerkId: req.body.clerkId
   })
-  res.send({ success: true })
+  res.send({ success: "new user created" })
 })
 
 async function createUser(client, newUser) {
