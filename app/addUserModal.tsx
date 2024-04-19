@@ -13,7 +13,7 @@ export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [convos, setConvos] = useState<object[]>()
+  const [convos, setFoundConvos] = useState<object[]>()
   const { userId } = useAuth();
   const { user } = useUser();
 
@@ -71,7 +71,7 @@ export default function addUserModal() {
   useEffect(() => {
     fetchConvo()
       .then(conversations => {
-        setConvos(conversations.filter((convo: any) => convo.firstUser === userId))
+        setFoundConvos(conversations.filter((convo: any) => convo.firstUser === userId || convo.secondUser === userId))
       })
     fetchUsers()
       .then(users => {

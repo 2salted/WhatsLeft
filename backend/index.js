@@ -30,7 +30,6 @@ app.get('/search', async (req, res) => {
 app.get('/convos', async (req, res) => {
   try {
     const result = await client.db("whatsleft").collection("conversations").find().toArray()
-    console.log(result)
     res.json(result)
   } catch (err) {
     console.error("error searching connnvos", err)
