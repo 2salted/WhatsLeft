@@ -82,6 +82,7 @@ export default function addUserModal() {
     fetchConvo()
       .then(conversations => {
         setFoundConvos(conversations.filter((convo: any) => convo.firstUser === userId || convo.secondUser === userId))
+        setShowSpinner(false)
       })
     fetchUsers()
       .then(users => {
@@ -92,6 +93,8 @@ export default function addUserModal() {
         console.error('Error fetching users:', error);
       });
   }, [searchUser])
+
+  console.log("users data", usersData)
 
   return (
     <SafeAreaView className='flex-1 bg-[#1e1e1e]'>
