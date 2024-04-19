@@ -7,13 +7,22 @@ type User = {
   firstName: string,
   lastName: string,
   clerkId: string,
+  user: object
+}
+interface provider {
+  firstUser: string,
+  secondUser: string,
+}
+type convoType = {
+  user: object,
+  clerkId: string
 }
 
 export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [convos, setFoundConvos] = useState<object[]>()
+  const [foundConvos, setFoundConvos] = useState<Array<provider>>();
   const { userId } = useAuth();
   const { user } = useUser();
 
@@ -84,8 +93,6 @@ export default function addUserModal() {
       });
   }, [searchUser])
 
-  console.log("conversations", convos)
-
   return (
     <SafeAreaView className='flex-1 bg-[#1e1e1e]'>
       <ExpoStatusBar style='light' hidden={false} />
@@ -106,7 +113,6 @@ export default function addUserModal() {
               return (
                 <View key={index} className="py-3">
                   <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
-                    createNewConvo(user.clerkId, user.firstName)
                   }}>
                     <Text className='text-gray-50 text-base font-bold'>{user.firstName}</Text>
                   </TouchableOpacity>
