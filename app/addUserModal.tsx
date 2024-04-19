@@ -68,6 +68,7 @@ export default function addUserModal() {
       return []
     }
   }
+
   useEffect(() => {
     fetchConvo()
       .then(conversations => {
