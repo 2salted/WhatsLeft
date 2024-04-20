@@ -9,25 +9,17 @@ type User = {
   clerkId: string,
   user: object
 }
-interface provider {
-  firstUser: string,
-  secondUser: string,
-}
-type convoType = {
-  user: object,
-  clerkId: string
-}
 
 export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [foundConvos, setFoundConvos] = useState<Array<provider>>();
   const { userId } = useAuth();
 
   async function createNewConvo(users: Array<any>) {
+    setShowSpinner(true)
     try {
-      fetch('http://192.168.0.148:3000/createConvo', {
+      await fetch('http://192.168.0.148:3000/createConvo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,6 +27,7 @@ export default function addUserModal() {
         body: JSON.stringify({ users })
       }).then(response => response.json())
         .then(data => {
+          setShowSpinner(false)
           console.log('Success:', data);
         })
         .catch(error => {
@@ -44,18 +37,6 @@ export default function addUserModal() {
       console.error('Error:', error);
     }
   };
-
-  async function fetchConvo() {
-    try {
-      setShowSpinner(true)
-      const response = await fetch('http://192.168.0.148:3000/convos')
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.error('Error Fetching Convo');
-      return []
-    }
-  }
 
   async function fetchUsers() {
     try {

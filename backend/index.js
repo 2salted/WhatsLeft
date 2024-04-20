@@ -27,16 +27,6 @@ app.get('/search', async (req, res) => {
   }
 });
 
-app.get('/convos', async (req, res) => {
-  try {
-    const result = await client.db("whatsleft").collection("conversations").find().toArray()
-    res.json(result)
-  } catch (err) {
-    console.error("error searching connnvos", err)
-    res.status(500).json({ error: "errorrrr" })
-  }
-})
-
 app.get('/:clerkId', async (req, res) => {
   try {
     const { clerkId } = req.params;
@@ -55,8 +45,13 @@ app.get('/:clerkId', async (req, res) => {
 app.post('/createConvo', async (req, res) => {
   try {
     const users = req.body.users;
-    await createConvo(client, { users });
-    res.json({ success: "new convo created" });
+    const existingUser = await client.db("whatsleft").collection("conversations").findOne({ users: { $all: users } });
+    if (existingUser) {
+      res.json({ exists: true });
+    } else {
+      res.json({ success: "new convo created" });
+      await createConvo(client, { users });
+    }
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -90,4 +85,3 @@ app.listen(port, async () => {
   }
   console.log(`Example app listening on port ${port}`)
 })
-
