@@ -24,21 +24,15 @@ export default function addUserModal() {
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const [foundConvos, setFoundConvos] = useState<Array<provider>>();
   const { userId } = useAuth();
-  const { user } = useUser();
 
-  async function createNewConvo(secondUserState: string, secondUserName: string) {
+  async function createNewConvo(users: string[]) {
     try {
       fetch('http://192.168.0.148:3000/createConvo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstUser: userId,
-          secondUser: secondUserState,
-          firstUserName: user?.firstName,
-          secondUserName: secondUserName,
-        })
+        body: JSON.stringify({ users })
       }).then(response => response.json())
         .then(data => {
           console.log('Success:', data);
@@ -79,19 +73,20 @@ export default function addUserModal() {
   }
 
   useEffect(() => {
-    fetchConvo()
-      .then(conversations => {
-        setFoundConvos(conversations.filter((convo: any) => convo.firstUser === userId || convo.secondUser === userId))
-        setShowSpinner(false)
-      })
-    fetchUsers()
-      .then(users => {
-        setUsersData(users.filter((user: any) => user.clerkId !== userId))
-        setShowSpinner(false)
-      })
-      .catch(error => {
-        console.error('Error fetching users:', error);
-      });
+    // fetchConvo()
+    //   .then(conversations => {
+    //     setFoundConvos(conversations.filter((convo: any) => convo.firstUser === userId || convo.secondUser === userId))
+    //     setShowSpinner(false)
+    //   })
+    // fetchUsers()
+    //   .then(users => {
+    //     setUsersData(users.filter((user: any) => user.clerkId !== userId))
+    //     setShowSpinner(false)
+    //   })
+    //   .catch(error => {
+    //     console.error('Error fetching users:', error);
+    //   });
+    createNewConvo(['user_123123123', 'user_9879869'])
   }, [searchUser])
 
   console.log("users data", usersData)

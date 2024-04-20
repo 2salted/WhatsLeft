@@ -53,12 +53,15 @@ app.get('/:clerkId', async (req, res) => {
 });
 
 app.post('/createConvo', async (req, res) => {
-  createConvo(client, {
-    firstUser: req.body.firstUser, secondUser: req.body.secondUser,
-    firstUserName: req.body.firstUserName, secondUserName: req.body.secondUserName
-  })
-  res.send({ success: "new convo created" })
-})
+  try {
+    const users = req.body.users;
+    await createConvo(client, { users });
+    res.json({ success: "new convo created" });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 async function createConvo(client, newConvo) {
   const result = await client.db("whatsleft").collection("conversations").insertOne(newConvo);
