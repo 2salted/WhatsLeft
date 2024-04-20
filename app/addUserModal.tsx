@@ -45,17 +45,17 @@ export default function addUserModal() {
     }
   };
 
-  // async function fetchConvo() {
-  //   try {
-  //     setShowSpinner(true)
-  //     const response = await fetch('http://192.168.0.148:3000/convos')
-  //     const data = await response.json()
-  //     return data
-  //   } catch (error) {
-  //     console.error('Error Fetching Convo');
-  //     return []
-  //   }
-  // }
+  async function fetchConvo() {
+    try {
+      setShowSpinner(true)
+      const response = await fetch('http://192.168.0.148:3000/convos')
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Error Fetching Convo');
+      return []
+    }
+  }
 
   async function fetchUsers() {
     try {
