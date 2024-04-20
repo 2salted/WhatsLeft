@@ -25,7 +25,7 @@ export default function addUserModal() {
   const [foundConvos, setFoundConvos] = useState<Array<provider>>();
   const { userId } = useAuth();
 
-  async function createNewConvo(users: string[]) {
+  async function createNewConvo(users: Array<any>) {
     try {
       fetch('http://192.168.0.148:3000/createConvo', {
         method: 'POST',
@@ -52,7 +52,7 @@ export default function addUserModal() {
       const data = await response.json()
       return data
     } catch (error) {
-      console.error('Error fetching users');
+      console.error('Error Fetching Convo');
       return []
     }
   }
@@ -73,23 +73,16 @@ export default function addUserModal() {
   }
 
   useEffect(() => {
-    // fetchConvo()
-    //   .then(conversations => {
-    //     setFoundConvos(conversations.filter((convo: any) => convo.firstUser === userId || convo.secondUser === userId))
-    //     setShowSpinner(false)
-    //   })
-    // fetchUsers()
-    //   .then(users => {
-    //     setUsersData(users.filter((user: any) => user.clerkId !== userId))
-    //     setShowSpinner(false)
-    //   })
-    //   .catch(error => {
-    //     console.error('Error fetching users:', error);
-    //   });
-    createNewConvo(['user_123123123', 'user_9879869'])
+    fetchUsers()
+      .then(users => {
+        setUsersData(users.filter((user: any) => user.clerkId !== userId))
+        setShowSpinner(false)
+      })
+      .catch(error => {
+        setShowSpinner(false)
+        console.error('Error fetching users:', error);
+      });
   }, [searchUser])
-
-  console.log("users data", usersData)
 
   return (
     <SafeAreaView className='flex-1 bg-[#1e1e1e]'>
@@ -111,6 +104,7 @@ export default function addUserModal() {
               return (
                 <View key={index} className="py-3">
                   <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
+                    createNewConvo([userId, user.clerkId])
                   }}>
                     <Text className='text-gray-50 text-base font-bold'>{user.firstName}</Text>
                   </TouchableOpacity>
