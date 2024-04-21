@@ -59,7 +59,7 @@ app.get('/:clerkId', async (req, res) => {
   }
 });
 
-app.get('/createConvo', async (req, res) => {
+app.post('/createConvo', async (req, res) => {
   try {
     const users = req.body.users;
     const id = req.body.id;
