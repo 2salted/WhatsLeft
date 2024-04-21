@@ -1,10 +1,13 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
+import { FontAwesome } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { Text, SafeAreaView, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, SafeAreaView, ScrollView, View, TextInput } from 'react-native';
+import { SearchBar } from 'react-native-screens';
 
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
+  const [convoSearch, setConvoSearch] = useState("")
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
@@ -59,6 +62,16 @@ export default function Tab() {
       />
       <ScrollView>
         <Text className='text-gray-50 text-4xl font-bold px-5'>Chats</Text>
+        <View className='px-4 pb-3 pt-3'>
+          <TextInput
+            className="bg-zinc-800 px-2 py-2 text-base rounded-xl
+              leading-5 text-white"
+            placeholder="Search..."
+            value={convoSearch}
+            placeholderTextColor="#8e8e8e"
+            onChangeText={((searchConvo) => setConvoSearch(searchConvo))}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

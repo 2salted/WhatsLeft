@@ -60,7 +60,6 @@ export default function addUserModal() {
         setShowSpinner(false)
       })
       .catch(error => {
-        setShowSpinner(false)
         console.error('Error fetching users:', error);
       });
   }, [searchUser])
