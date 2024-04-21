@@ -17,6 +17,23 @@ const app = express()
 app.use(express.json())
 const port = 3000
 
+//code inside this endpoint isn't being ran for some unkown reason
+app.get('pepe', async (req, res) => {
+  try {
+    const idToSearch = req.body.userId
+    console.log(req.body)
+    const searchResult = await client.db("whatsleft").collection("conversations").findOne({ userId: { $in: idToSearch } });
+    if (searchResult.length > 0) {
+      res.json({ exists: true, matchingUsers: searchResult });
+    } else {
+      res.json({ exists: false });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/search', async (req, res) => {
   try {
     const searchResult = await client.db("whatsleft").collection("users").find().toArray();
@@ -42,15 +59,16 @@ app.get('/:clerkId', async (req, res) => {
   }
 });
 
-app.post('/createConvo', async (req, res) => {
+app.get('/createConvo', async (req, res) => {
   try {
     const users = req.body.users;
+    const id = req.body.id;
     const existingUser = await client.db("whatsleft").collection("conversations").findOne({ users: { $all: users } });
     if (existingUser) {
       res.json({ exists: true });
     } else {
       res.json({ success: "new convo created" });
-      await createConvo(client, { users });
+      await createConvo(client, { users, id });
     }
   } catch (error) {
     console.error('Error:', error);

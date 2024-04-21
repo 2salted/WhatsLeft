@@ -1,7 +1,7 @@
 import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import { useEffect, useState } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-expo';
+import { useAuth } from '@clerk/clerk-expo';
 
 type User = {
   firstName: string,
@@ -11,12 +11,13 @@ type User = {
 }
 
 export default function addUserModal() {
+  let randomStringId = "";
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
   const { userId } = useAuth();
 
-  async function createNewConvo(users: Array<any>) {
+  async function createNewConvo(users: Array<any>, id: string) {
     setShowSpinner(true)
     try {
       await fetch('http://192.168.0.148:3000/createConvo', {
@@ -24,7 +25,7 @@ export default function addUserModal() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ users })
+        body: JSON.stringify({ users, id })
       }).then(response => response.json())
         .then(data => {
           setShowSpinner(false)
@@ -40,15 +41,11 @@ export default function addUserModal() {
 
   function createRandomString(length: any) {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
     for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+      randomStringId += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    console.log(result)
-    return result;
+    return randomStringId;
   }
-
-  createRandomString(38)
 
   async function fetchUsers() {
     try {
@@ -74,7 +71,7 @@ export default function addUserModal() {
       .catch(error => {
         console.error('Error fetching users:', error);
       });
-  }, [searchUser])
+  }, [])
 
   return (
     <SafeAreaView className='flex-1 bg-[#1e1e1e]'>
@@ -96,7 +93,8 @@ export default function addUserModal() {
               return (
                 <View key={index} className="py-3">
                   <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
-                    createNewConvo([userId, user.clerkId])
+                    createRandomString(38);
+                    createNewConvo([userId, user.clerkId], randomStringId);
                   }}>
                     <Text className='text-gray-50 text-base font-bold'>{user.firstName}</Text>
                   </TouchableOpacity>

@@ -1,5 +1,4 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
-import { FontAwesome } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView, View, TextInput } from 'react-native';
@@ -48,9 +47,27 @@ export default function Tab() {
     }
   };
 
+  async function checkPersonalMessages(userId: string) {
+    try {
+      console.log(userId)
+      await fetch('http://192.168.0.148:3000/pepe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId })
+      }).catch(error => {
+        console.error('Error:', error);
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   useEffect(() => {
     checkClerkIdExists(userId)
-  }, []);
+    checkPersonalMessages(userId)
+  }, [convoSearch]);
 
   return (
     <SafeAreaView className='flex-1 bg-black'>
