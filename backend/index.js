@@ -17,14 +17,16 @@ const app = express()
 app.use(express.json())
 const port = 3000
 
-app.post('/pepe', async (req, res) => {
+app.post('/personalMessages', async (req, res) => {
   try {
     const idToSearch = req.body.userId;
     const searchResult = await client.db("whatsleft").collection("conversations")
       .find({ users: { $in: idToSearch } }).toArray();
-    console.log("search resulty", searchResult)
     if (searchResult) {
-      res.json({ exists: true, matchingUser: searchResult });
+      // const findingUsersConvo = await client.db("whatsleft").collection("users")
+      //   .find({ clerkId: { $in: userIdConvo } }).toArray();
+      // console.log("finding convosinio", findingUsersConvo)
+      res.json(searchResult);
     } else {
       res.json({ exists: false });
     }
@@ -99,7 +101,8 @@ app.listen(port, async () => {
     await client.connect();
     await client.db("whatsleft").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
+  } catch (err) {
+    console.log("MongoDB Error:", err)
   }
   console.log(`Example app listening on port ${port}`)
 })
