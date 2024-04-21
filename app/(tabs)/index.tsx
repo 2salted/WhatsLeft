@@ -2,7 +2,6 @@ import { useAuth, useUser } from '@clerk/clerk-expo';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView, View, TextInput } from 'react-native';
-import { SearchBar } from 'react-native-screens';
 
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
@@ -47,9 +46,8 @@ export default function Tab() {
     }
   };
 
-  async function checkPersonalMessages(userId: string) {
+  async function checkPersonalMessages(userId: string[]) {
     try {
-      console.log(userId)
       await fetch('http://192.168.0.148:3000/pepe', {
         method: 'POST',
         headers: {
@@ -65,8 +63,8 @@ export default function Tab() {
   };
 
   useEffect(() => {
-    checkClerkIdExists(userId)
-    checkPersonalMessages(userId)
+    checkClerkIdExists(userId);
+    checkPersonalMessages([userId]);
   }, [convoSearch]);
 
   return (

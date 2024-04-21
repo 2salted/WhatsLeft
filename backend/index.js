@@ -17,14 +17,14 @@ const app = express()
 app.use(express.json())
 const port = 3000
 
-//code inside this endpoint isn't being ran for some unkown reason
-app.get('pepe', async (req, res) => {
+app.post('/pepe', async (req, res) => {
   try {
-    const idToSearch = req.body.userId
-    console.log(req.body)
-    const searchResult = await client.db("whatsleft").collection("conversations").findOne({ userId: { $in: idToSearch } });
-    if (searchResult.length > 0) {
-      res.json({ exists: true, matchingUsers: searchResult });
+    const idToSearch = req.body.userId;
+    const searchResult = await client.db("whatsleft").collection("conversations")
+      .find({ users: { $in: idToSearch } }).toArray();
+    console.log("search resulty", searchResult)
+    if (searchResult) {
+      res.json({ exists: true, matchingUser: searchResult });
     } else {
       res.json({ exists: false });
     }
