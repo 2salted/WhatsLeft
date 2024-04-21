@@ -38,6 +38,18 @@ export default function addUserModal() {
     }
   };
 
+  function createRandomString(length: any) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    console.log(result)
+    return result;
+  }
+
+  createRandomString(38)
+
   async function fetchUsers() {
     try {
       setShowSpinner(true)
