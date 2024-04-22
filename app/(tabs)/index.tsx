@@ -59,7 +59,6 @@ export default function Tab() {
         body: JSON.stringify({ userIdEndPoint })
       });
       const data = await response.json();
-      console.log("data", data)
       data.exists !== false ?
         setMessages(data.filter((item: any) => item.clerkId !== userId))
         : setMessages([])
@@ -99,15 +98,20 @@ export default function Tab() {
             onChangeText={((searchConvo) => setConvoSearch(searchConvo))}
           />
           <View>
-            {messages.length > 0 ?
-              messages?.map((convo, index) => {
-                return (
-                  <Text key={index} className='text-gray-50'>{convo.firstName}</Text>
-                )
-              }) :
-              <View className='pt-32'>
+            {showSpinner ?
+              <View className='items-center justify-center h-full'>
                 <ActivityIndicator size='large' />
               </View>
+              :
+              messages.length > 0 ?
+                messages?.map((convo, index) => {
+                  return (
+                    <Text key={index} className='text-gray-50'>{convo.firstName}</Text>
+                  )
+                }) :
+                <View className='items-center justify-center h-full'>
+                  <Text className='text-gray-50 font-bold text-xl'>No Messages</Text>
+                </View>
             }
           </View>
         </View>
