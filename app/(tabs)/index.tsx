@@ -5,7 +5,8 @@ import { Text, SafeAreaView, ScrollView, View, TextInput } from 'react-native';
 
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
-  const [convoSearch, setConvoSearch] = useState("")
+  const [convoSearch, setConvoSearch] = useState<string>("");
+  const [messages, setMessages] = useState<Array<any>>();
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
@@ -46,26 +47,31 @@ export default function Tab() {
     }
   };
 
-  async function checkPersonalMessages(userId: string[]) {
+  async function checkPersonalMessages(userIdEndPoint: string[]) {
     try {
-      await fetch('http://192.168.0.148:3000/pepe', {
+      const response = await fetch('http://192.168.0.148:3000/personalMessages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId })
-      }).catch(error => {
-        console.error('Error:', error);
+        body: JSON.stringify({ userIdEndPoint })
       });
+      const data = await response.json();
+      setMessages(data.filter((item: any) => item.clerkId !== userId))
+      return data;
     } catch (error) {
       console.error('Error:', error);
+      return { error: 'Failed to fetch data' };
     }
   };
 
   useEffect(() => {
     checkClerkIdExists(userId);
-    checkPersonalMessages([userId]);
   }, [convoSearch]);
+
+  useEffect(() => {
+    checkPersonalMessages([userId])
+  }, [])
 
   return (
     <SafeAreaView className='flex-1 bg-black'>
@@ -80,12 +86,19 @@ export default function Tab() {
         <View className='px-4 pb-3 pt-3'>
           <TextInput
             className="bg-zinc-800 px-2 py-2 text-base rounded-xl
-              leading-5 text-white"
+            leading-5 text-white"
             placeholder="Search..."
             value={convoSearch}
             placeholderTextColor="#8e8e8e"
             onChangeText={((searchConvo) => setConvoSearch(searchConvo))}
           />
+          <View>
+            {messages?.map((convo, index) => {
+              return (
+                <Text key={index} className='text-gray-50'>{convo.firstName}</Text>
+              );
+            })}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

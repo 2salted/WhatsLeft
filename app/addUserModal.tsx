@@ -39,7 +39,7 @@ export default function addUserModal() {
     }
   };
 
-  function createRandomString(length: any) {
+  function createRandomString(length: number) {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i = 0; i < length; i++) {
       randomStringId += chars.charAt(Math.floor(Math.random() * chars.length));

@@ -19,14 +19,14 @@ const port = 3000
 
 app.post('/personalMessages', async (req, res) => {
   try {
-    const idToSearch = req.body.userId;
+    const idToSearch = req.body.userIdEndPoint;
     const searchResult = await client.db("whatsleft").collection("conversations")
       .find({ users: { $in: idToSearch } }).toArray();
-    if (searchResult) {
-      // const findingUsersConvo = await client.db("whatsleft").collection("users")
-      //   .find({ clerkId: { $in: userIdConvo } }).toArray();
-      // console.log("finding convosinio", findingUsersConvo)
-      res.json(searchResult);
+    if (searchResult && searchResult.length > 0) {
+      const userIdConvo = searchResult.map(item => item.users).flat()
+      const findingUsersConvo = await client.db("whatsleft").collection("users")
+        .find({ clerkId: { $in: userIdConvo } }).toArray();
+      res.json(findingUsersConvo);
     } else {
       res.json({ exists: false });
     }
