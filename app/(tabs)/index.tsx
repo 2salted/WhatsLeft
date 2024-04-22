@@ -76,7 +76,7 @@ export default function Tab() {
 
   useEffect(() => {
     checkPersonalMessages([userId])
-  }, [])
+  }, [convoSearch])
 
   return (
     <SafeAreaView className='flex-1 bg-black'>
