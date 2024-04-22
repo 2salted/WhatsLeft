@@ -1,12 +1,13 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text, SafeAreaView, ScrollView, View, TextInput } from 'react-native';
+import { Text, SafeAreaView, ScrollView, View, TextInput, ActivityIndicator } from 'react-native';
 
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
   const [convoSearch, setConvoSearch] = useState<string>("");
-  const [messages, setMessages] = useState<Array<any>>();
+  const [messages, setMessages] = useState<Array<any>>([]);
+  const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
@@ -49,6 +50,7 @@ export default function Tab() {
 
   async function checkPersonalMessages(userIdEndPoint: string[]) {
     try {
+      setShowSpinner(true);
       const response = await fetch('http://192.168.0.148:3000/personalMessages', {
         method: 'POST',
         headers: {
@@ -57,7 +59,11 @@ export default function Tab() {
         body: JSON.stringify({ userIdEndPoint })
       });
       const data = await response.json();
-      setMessages(data.filter((item: any) => item.clerkId !== userId))
+      console.log("data", data)
+      data.exists !== false ?
+        setMessages(data.filter((item: any) => item.clerkId !== userId))
+        : setMessages([])
+      setShowSpinner(false)
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -93,11 +99,16 @@ export default function Tab() {
             onChangeText={((searchConvo) => setConvoSearch(searchConvo))}
           />
           <View>
-            {messages?.map((convo, index) => {
-              return (
-                <Text key={index} className='text-gray-50'>{convo.firstName}</Text>
-              );
-            })}
+            {messages.length > 0 ?
+              messages?.map((convo, index) => {
+                return (
+                  <Text key={index} className='text-gray-50'>{convo.firstName}</Text>
+                )
+              }) :
+              <View className='pt-32'>
+                <ActivityIndicator size='large' />
+              </View>
+            }
           </View>
         </View>
       </ScrollView>
