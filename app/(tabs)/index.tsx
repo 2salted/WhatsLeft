@@ -1,7 +1,8 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
+import { FontAwesome } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Text, SafeAreaView, ScrollView, View, TextInput, ActivityIndicator } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { Text, SafeAreaView, ScrollView, View, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
@@ -98,6 +99,13 @@ export default function Tab() {
             onChangeText={((searchConvo) => setConvoSearch(searchConvo))}
           />
           <View>
+            <View className='pt-4 items-end pr-2'>
+              <TouchableOpacity onPress={() => {
+                checkPersonalMessages([userId])
+              }}>
+                <FontAwesome name='rotate-right' size={20} style={{ color: 'white' }} />
+              </TouchableOpacity>
+            </View>
             {showSpinner ?
               <View className='items-center justify-center h-full'>
                 <ActivityIndicator size='large' />
@@ -109,7 +117,7 @@ export default function Tab() {
                     <Text key={index} className='text-gray-50'>{convo.firstName}</Text>
                   )
                 }) :
-                <View className='items-center justify-center h-full'>
+                <View className='items-center justify-center pt-20'>
                   <Text className='text-gray-50 font-bold text-xl'>No Messages</Text>
                 </View>
             }

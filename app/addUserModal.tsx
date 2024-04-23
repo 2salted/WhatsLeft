@@ -15,7 +15,11 @@ export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const { userId } = useAuth();
+  const { userId, isLoaded } = useAuth();
+
+  if (!isLoaded || !userId) {
+    return null;
+  }
 
   async function createNewConvo(users: Array<any>, id: string) {
     setShowSpinner(true)
