@@ -48,7 +48,7 @@ export default function AppLayout() {
               ),
               headerRight: () => (
                 <View>
-                  <Link href="../">
+                  <Link href="/">
                     <FontAwesome name='close'
                       size={20} style={{ color: 'white' }} />
                   </Link>

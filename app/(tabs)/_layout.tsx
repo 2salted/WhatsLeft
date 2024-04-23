@@ -1,8 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
-import { Stack } from 'expo-router';
 import { Pressable } from 'react-native';
 
 export default function TabLayout() {
@@ -30,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Chats',
+          title: 'index',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="comments" color={color} />,
           headerLeft: () => (
             <Pressable>

@@ -2,6 +2,7 @@ import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, Touchable
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
+import { router } from 'expo-router';
 
 type User = {
   firstName: string,
@@ -33,6 +34,7 @@ export default function addUserModal() {
       }).then(response => response.json())
         .then(data => {
           setShowSpinner(false)
+          router.replace('/')
           console.log('Success:', data);
         })
         .catch(error => {

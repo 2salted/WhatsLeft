@@ -1,7 +1,7 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import { FontAwesome } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView, View, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 export default function Tab() {
@@ -73,11 +73,8 @@ export default function Tab() {
 
   useEffect(() => {
     checkClerkIdExists(userId);
-  }, [convoSearch]);
-
-  useEffect(() => {
     checkPersonalMessages([userId])
-  }, [convoSearch])
+  }, [convoSearch]);
 
   return (
     <SafeAreaView className='flex-1 bg-black'>
@@ -98,14 +95,7 @@ export default function Tab() {
             placeholderTextColor="#8e8e8e"
             onChangeText={((searchConvo) => setConvoSearch(searchConvo))}
           />
-          <View>
-            <View className='pt-4 items-end pr-2'>
-              <TouchableOpacity onPress={() => {
-                checkPersonalMessages([userId])
-              }}>
-                <FontAwesome name='rotate-right' size={20} style={{ color: 'white' }} />
-              </TouchableOpacity>
-            </View>
+          <View className='pt-6'>
             {showSpinner ?
               <View className='items-center justify-center h-full'>
                 <ActivityIndicator size='large' />
