@@ -1,5 +1,4 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
-import { FontAwesome } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView, View, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
