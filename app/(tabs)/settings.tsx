@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
-import { SafeAreaView, Text, View, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, Text, View, Pressable, Image } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
+import * as ImagePicker from 'expo-image-picker';
+import { router } from "expo-router";
 
 export default function settings() {
+  const [image, setImage] = useState('');
   const { isLoaded, userId, sessionId, signOut } = useAuth();
   const { user } = useUser();
 
@@ -44,16 +47,43 @@ export default function settings() {
     }
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   useEffect(() => {
     checkClerkIdExists(userId)
   }, []);
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      backgroundColor: 'black'
-    }}>
+    <SafeAreaView className="flex-1 bg-black">
       <Text className='text-gray-50 text-4xl font-bold px-5'>Settings</Text>
+      <View className="px-5 py-3">
+        <View className="bg-zinc-800 rounded-lg p-3 flex-row">
+          <Pressable onPress={pickImage}>
+            {!image ?
+              <Image source={require('../../assets/images/defaultImage.png')} className="rounded-full h-14 w-14" />
+              :
+              <Image source={{ uri: image }} className="h-14 w-14 rounded-full" />
+            }
+          </Pressable>
+          <View className="pl-3 justify-center">
+            <Text className="text-gray-50 text-xl capitalize leading-6">{user?.firstName}</Text>
+            <Text className="text-gray-400 text-lg leading-6">Available</Text>
+          </View>
+        </View>
+      </View>
       <View className="items-center py-5">
         <Pressable
           onPress={() => {
@@ -65,4 +95,3 @@ export default function settings() {
     </SafeAreaView>
   );
 };
-
