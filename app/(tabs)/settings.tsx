@@ -73,6 +73,9 @@ export default function settings() {
         },
         body: JSON.stringify({ base64 })
       });
+      const data = await response.json();
+      console.log("data", data)
+      return data
     }
   }
 
