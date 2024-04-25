@@ -46,20 +46,35 @@ export default function settings() {
     }
   };
 
+  let imageType: any;
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      base64: true,
+      aspect: [4, 4],
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      console.log("type", result.assets[0].mimeType)
+      sendImageToApi(result.assets[0].base64, result.assets[0].mimeType)
+      imageType = result.assets[0].mimeType
     }
   };
+
+  async function sendImageToApi(base64: any, type: any) {
+    if (type === 'image/png' || type === 'image/jpg' || type === 'image/jpeg') {
+      const response = await fetch('http://192.168.0.148:3000/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': imageType,
+        },
+        body: JSON.stringify({ base64 })
+      });
+    }
+  }
 
   useEffect(() => {
     checkClerkIdExists(userId)

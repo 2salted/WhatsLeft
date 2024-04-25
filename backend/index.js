@@ -141,14 +141,15 @@ app.post(
     };
 
     const sourceFile = req.body;
-    // generate a random file name
     const randomName = Math.random().toString(36).substring(7);
-    // check jpg or png
     if (req.get("content-type") === "image/jpeg") {
       var destinationObject = randomName + ".jpg";
     }
     if (req.get("content-type") === "image/png") {
       var destinationObject = randomName + ".png";
+    }
+    if (req.get("content-type") === "image/jpeg") {
+      var destinationObject = randomName + ".jpeg";
     }
 
     await minioClient.putObject(
@@ -159,10 +160,10 @@ app.post(
     );
     console.log(
       "File " +
-        " uploaded as object " +
-        destinationObject +
-        " in bucket " +
-        bucket
+      " uploaded as object " +
+      destinationObject +
+      " in bucket " +
+      bucket
     );
 
     const imageURL = `${process.env.MINIO_ENDPOINT}/${bucket}/${destinationObject}`;
