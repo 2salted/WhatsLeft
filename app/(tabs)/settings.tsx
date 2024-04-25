@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, Text, View, Pressable, Image } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import * as ImagePicker from 'expo-image-picker';
-import { router } from "expo-router";
 
 export default function settings() {
   const [image, setImage] = useState('');
