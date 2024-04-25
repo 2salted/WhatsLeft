@@ -1,0 +1,15 @@
+volumes:
+  minio_data:
+
+services:
+  
+  minio:
+    image: quay.io/minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio_data:/data
+    env_file:
+      - .env
+    command: server /data --console-address ":9001"
