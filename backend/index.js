@@ -24,7 +24,8 @@ const minioClient = new Minio.Client({
 });
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
 const port = 3000;
 
 app.post("/personalMessages", async (req, res) => {
@@ -123,9 +124,8 @@ app.post("/user", async (req, res) => {
 
 app.post(
   "/upload",
-  bodyParser.raw({ type: ["image/jpeg", "image/png"], limit: "5mb" }),
+  bodyParser.raw({ type: ["image/jpeg", "image/png"], limit: "50mb" }),
   async (req, res) => {
-    console.log(req.body);
 
     const bucket = "whatsleft";
     const exists = await minioClient.bucketExists(bucket);
@@ -140,6 +140,7 @@ app.post(
       "Content-Type": req.get("content-type"),
     };
 
+    console.log(req.get('content-type'))
     const sourceFile = req.body;
     const randomName = Math.random().toString(36).substring(7);
     if (req.get("content-type") === "image/jpeg") {
@@ -148,9 +149,6 @@ app.post(
     if (req.get("content-type") === "image/png") {
       var destinationObject = randomName + ".png";
     }
-    if (req.get("content-type") === "image/jpeg") {
-      var destinationObject = randomName + ".jpeg";
-    }
 
     await minioClient.putObject(
       bucket,
@@ -158,6 +156,7 @@ app.post(
       sourceFile,
       metaData
     );
+
     console.log(
       "File " +
       " uploaded as object " +

@@ -46,7 +46,6 @@ export default function settings() {
     }
   };
 
-  let imageType: any;
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -58,23 +57,20 @@ export default function settings() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      console.log("type", result.assets[0].mimeType)
       sendImageToApi(result.assets[0].base64, result.assets[0].mimeType)
-      imageType = result.assets[0].mimeType
     }
   };
 
   async function sendImageToApi(base64: any, type: any) {
-    if (type === 'image/png' || type === 'image/jpg' || type === 'image/jpeg') {
+    if (type === 'image/png' || type === 'image/jpeg') {
       const response = await fetch('http://192.168.0.148:3000/upload', {
         method: 'POST',
         headers: {
-          'Content-Type': imageType,
+          'Content-Type': 'image/jpeg',
         },
         body: JSON.stringify({ base64 })
       });
       const data = await response.json();
-      console.log("data", data)
       return data
     }
   }
