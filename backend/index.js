@@ -24,7 +24,7 @@ const minioClient = new Minio.Client({
 });
 
 const app = express();
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json());
 const port = 3000;
 
 app.post("/personalMessages", async (req, res) => {

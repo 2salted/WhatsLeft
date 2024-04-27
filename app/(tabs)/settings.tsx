@@ -62,17 +62,23 @@ export default function settings() {
   };
 
   async function sendImageToApi(base64: any, type: any) {
-    if (type === 'image/png' || type === 'image/jpeg') {
-      const response = await fetch('http://192.168.0.148:3000/upload', {
-        method: 'POST',
-        headers: {
-          'Content-Type': type,
-        },
-        body: base64,
-      });
-      const data = await response.json();
-      return data
-    }
+    var dataUrl = "data:application/octet-binary;base64," + base64;
+
+    await fetch(dataUrl)
+      .then(res => res.arrayBuffer())
+      .then(async buffer => {
+        if (type === 'image/png' || type === 'image/jpeg') {
+          const response = await fetch('http://192.168.0.148:3000/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': type,
+            },
+            body: new Uint8Array(buffer),
+          });
+          const data = await response.json();
+          return data
+        }
+      })
   }
 
   useEffect(() => {
