@@ -164,7 +164,7 @@ app.post(
       bucket
     );
 
-    const imageURL = `${process.env.MINIO_ENDPOINT}/${bucket}/${destinationObject}`;
+    const imageURL = `http://192.168.0.148:9000/${bucket}/${destinationObject}`;
     console.log(imageURL)
     res.send({ imageURL: imageURL })
   }

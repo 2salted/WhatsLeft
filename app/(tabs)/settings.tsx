@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 export default function settings() {
   const [image, setImage] = useState('');
   const [showSpinner, setShowSpinner] = useState(false);
+  const [showSpinner2, setShowSpinner2] = useState(false);
   const { isLoaded, userId, sessionId, signOut } = useAuth();
   const { user } = useUser();
 
@@ -14,6 +15,7 @@ export default function settings() {
   }
 
   const checkForImage = async (userId: string) => {
+    setShowSpinner2(true)
     try {
       const response = await fetch('http://192.168.0.148:3000/findImage', {
         method: 'POST',
@@ -21,11 +23,17 @@ export default function settings() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId })
-      });
+      })
       const data = await response.json();
       setImage(data.pfp)
+      if (data) {
+        setTimeout(() => {
+          setShowSpinner2(false)
+        }, 3000)
+      }
       return data
     } catch (error) {
+      setShowSpinner2(false)
       console.error('Error:', error);
     }
   }
@@ -119,7 +127,6 @@ export default function settings() {
     checkClerkIdExists(userId)
     checkForImage(userId)
   }, []);
-  console.log("image url", image)
 
   return (
     <SafeAreaView className="flex-1 bg-black">
@@ -133,10 +140,14 @@ export default function settings() {
           <View className="px-5 py-3">
             <View className="bg-zinc-800 rounded-lg p-3 flex-row">
               <Pressable onPress={pickImage}>
-                {!image ?
-                  <Image source={require('../../assets/images/defaultImage.png')} className="rounded-full h-14 w-14" />
-                  :
-                  <Image source={{ uri: image }} className="h-14 w-14 rounded-full" />
+                {showSpinner2 ?
+                  <View className="p-5">
+                    <ActivityIndicator size='small' />
+                  </View>
+                  : !image ?
+                    <Image source={require('../../assets/images/defaultImage.png')} className="rounded-full h-14 w-14" />
+                    :
+                    <Image source={{ uri: image }} className="h-14 w-14 rounded-full" />
                 }
               </Pressable>
               <View className="pl-3 justify-center">
