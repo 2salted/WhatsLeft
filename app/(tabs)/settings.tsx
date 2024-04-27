@@ -75,11 +75,23 @@ export default function settings() {
               headers: {
                 'Content-Type': type,
               },
-              body: new Uint8Array(buffer),
+              body: new Uint8Array(buffer)
             })
             const data = await response.json();
-            setShowSpinner(false)
+            if (data) {
+              const imageURL = data.imageURL
+              const mongoUpload = await fetch('http://192.168.0.148:3000/uploadToMongo', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, imageURL })
+              })
+              const imageResult = await mongoUpload.json()
+              return imageResult
+            }
           }
+          setShowSpinner(false)
         })
     } catch (err) {
       setShowSpinner(false)

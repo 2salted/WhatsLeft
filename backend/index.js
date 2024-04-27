@@ -125,6 +125,7 @@ app.post(
   "/upload",
   bodyParser.raw({ type: ["image/jpeg", "image/png"], limit: "50mb" }),
   async (req, res) => {
+    console.log(req.body)
 
     const bucket = "whatsleft";
     const exists = await minioClient.bucketExists(bucket);
@@ -168,6 +169,22 @@ app.post(
     res.send({ imageURL: imageURL })
   }
 );
+
+app.post('/uploadToMongo', async (req, res) => {
+  const clerkId = req.body.userId
+  const imageURL = req.body.imageURL
+
+  try {
+    const user = await client.db("whatsleft").collection("users").findOne({ clerkId })
+    if (user) {
+      await client.db("whatsleft").collection("users").updateOne({ clerkId }, { $set: { pfp: imageURL } })
+      res.send({ success: true, message: 'Profile picture added successfully.' })
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+})
 
 async function createUser(client, newUser) {
   const result = await client
