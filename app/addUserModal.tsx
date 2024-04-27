@@ -94,7 +94,10 @@ export default function addUserModal() {
           />
         </View>
         <ScrollView className='px-4'>
-          {showSpinner ? <ActivityIndicator size='large' />
+          {showSpinner ?
+            <View className='pt-32'>
+              <ActivityIndicator size='large' />
+            </View>
             : usersData?.map((user, index) => {
               return (
                 <View key={index} className="py-3">
