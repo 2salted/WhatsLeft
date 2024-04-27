@@ -23,14 +23,9 @@ export default function settings() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId })
-      })
+      });
       const data = await response.json();
       setImage(data.pfp)
-      if (data) {
-        setTimeout(() => {
-          setShowSpinner2(false)
-        }, 3000)
-      }
       return data
     } catch (error) {
       setShowSpinner2(false)
@@ -76,6 +71,7 @@ export default function settings() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
+      allowsMultipleSelection: false,
       base64: true,
       aspect: [4, 4],
       quality: 1,
@@ -125,7 +121,9 @@ export default function settings() {
 
   useEffect(() => {
     checkClerkIdExists(userId)
-    checkForImage(userId)
+    checkForImage(userId).then(() => {
+      setShowSpinner2(false)
+    })
   }, []);
 
   return (
