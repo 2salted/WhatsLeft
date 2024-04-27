@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, Pressable, Image } from "react-native";
+import { SafeAreaView, Text, View, Pressable, Image, TouchableOpacity, Alert } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -65,7 +65,7 @@ export default function settings() {
     var dataUrl = "data:application/octet-binary;base64," + base64;
 
     await fetch(dataUrl)
-      .then(res => res.arrayBuffer())
+      .then(async res => await res.arrayBuffer())
       .then(async buffer => {
         if (type === 'image/png' || type === 'image/jpeg') {
           const response = await fetch('http://192.168.0.148:3000/upload', {
@@ -99,17 +99,22 @@ export default function settings() {
           </Pressable>
           <View className="pl-3 justify-center">
             <Text className="text-gray-50 text-xl capitalize leading-6">{user?.firstName}</Text>
-            <Text className="text-gray-400 text-lg leading-6">Available</Text>
+            <Text className="text-zinc-500 text-lg leading-6">Available</Text>
           </View>
         </View>
       </View>
-      <View className="items-center py-5">
-        <Pressable
-          onPress={() => {
-            signOut();
-          }}>
-          <Text className="text-white">Sign Out</Text>
-        </Pressable>
+      <Pressable
+        onPress={() => {
+          signOut();
+        }}>
+        <View className=" px-5 py-2">
+          <View className="items-center p-2.5 bg-zinc-800 rounded-lg">
+            <Text className="text-lg font-bold text-red-600">Sign Out</Text>
+          </View>
+        </View>
+      </Pressable>
+      <View>
+        <Text className="text-center p-2 text-sm text-zinc-700">App version: 1.0.0</Text>
       </View>
     </SafeAreaView>
   );
