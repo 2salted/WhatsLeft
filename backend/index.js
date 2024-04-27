@@ -164,6 +164,7 @@ app.post(
     );
 
     const imageURL = `${process.env.MINIO_ENDPOINT}/${bucket}/${destinationObject}`;
+    console.log(imageURL)
     res.send({ imageURL: imageURL });
   }
 );
