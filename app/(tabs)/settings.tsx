@@ -13,6 +13,23 @@ export default function settings() {
     return null;
   }
 
+  const checkForImage = async (userId: string) => {
+    try {
+      const response = await fetch('http://192.168.0.148:3000/findImage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId })
+      });
+      const data = await response.json();
+      setImage(data.pfp)
+      return data
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
   const checkClerkIdExists = async (clerkId: string) => {
     try {
       const response = await fetch(`http://192.168.0.148:3000/${clerkId}`);
@@ -57,7 +74,6 @@ export default function settings() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
       sendImageToApi(result.assets[0].base64, result.assets[0].mimeType)
     }
   };
@@ -88,10 +104,10 @@ export default function settings() {
                 body: JSON.stringify({ userId, imageURL })
               })
               const imageResult = await mongoUpload.json()
+              setShowSpinner(false)
               return imageResult
             }
           }
-          setShowSpinner(false)
         })
     } catch (err) {
       setShowSpinner(false)
@@ -101,7 +117,9 @@ export default function settings() {
 
   useEffect(() => {
     checkClerkIdExists(userId)
+    checkForImage(userId)
   }, []);
+  console.log("image url", image)
 
   return (
     <SafeAreaView className="flex-1 bg-black">

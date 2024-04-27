@@ -170,6 +170,21 @@ app.post(
   }
 );
 
+app.post('/findImage', async (req, res) => {
+  const clerkId = req.body.userId
+  try {
+    const user = await client.db("whatsleft").collection("users").findOne({ clerkId })
+    if (user && user.pfp) {
+      res.send({ success: true, pfp: user.pfp });
+    } else {
+      res.send({ success: false, message: 'Profile picture not found for the user.' });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+})
+
 app.post('/uploadToMongo', async (req, res) => {
   const clerkId = req.body.userId
   const imageURL = req.body.imageURL
