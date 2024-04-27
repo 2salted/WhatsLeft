@@ -138,7 +138,7 @@ export default function settings() {
             </View>
           </Pressable>
           <View>
-            <Text className="text-center p-2 text-sm text-zinc-700">App version: 1.0.0</Text>
+            <Text className="text-center p-2 text-sm text-zinc-700">App version: 1.1.0</Text>
           </View>
         </View>
       }
