@@ -76,10 +76,9 @@ export default function settings() {
                 'Content-Type': type,
               },
               body: new Uint8Array(buffer),
-            });
+            })
             const data = await response.json();
             setShowSpinner(false)
-            return data
           }
         })
     } catch (err) {
