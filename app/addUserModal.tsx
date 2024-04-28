@@ -1,4 +1,4 @@
-import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
@@ -16,6 +16,7 @@ export default function addUserModal() {
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
+  const [contacts, setContacts] = useState<Array<any>>();
   const { userId, isLoaded } = useAuth();
 
   if (!isLoaded || !userId) {
@@ -54,6 +55,7 @@ export default function addUserModal() {
   }
 
   async function fetchUsers() {
+    setShowSpinner(true)
     try {
       setShowSpinner(true)
       const response = await fetch('http://192.168.0.148:3000/search');
@@ -61,6 +63,7 @@ export default function addUserModal() {
         throw new Error('Failed to fetch users');
       }
       const data = await response.json();
+      data && setShowSpinner(false)
       return data
     } catch (error) {
       console.error('Error fetching users');
@@ -68,7 +71,46 @@ export default function addUserModal() {
     }
   }
 
+  const renderItem = ({ item, index }: { item: any; index: any }) => (
+    <View key={index} className='py-3'>
+      <TouchableOpacity
+        className='p-3 bg-[#2e2e2e] rounded-xl flex-row'
+        onPress={() => {
+          createRandomString(38);
+          createNewConvo([userId, item.clerkId], randomStringId);
+        }}
+      >
+        <Text className='text-white text-base font-bold'>
+          {item.firstName}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  async function checkPersonalMessages(userIdEndPoint: string[]) {
+    try {
+      setShowSpinner(true);
+      const response = await fetch('http://192.168.0.148:3000/personalMessages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userIdEndPoint })
+      });
+      const data = await response.json();
+      data.exists !== false ?
+        setContacts(data.filter((item: any) => item.clerkId !== userId))
+        : setContacts([])
+      setShowSpinner(false)
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return { error: 'Failed to fetch data' };
+    }
+  };
+
   useEffect(() => {
+    checkPersonalMessages([userId])
     fetchUsers()
       .then(users => {
         setUsersData(users.filter((user: any) => user.clerkId !== userId))
@@ -85,7 +127,7 @@ export default function addUserModal() {
       <View className='flex-col'>
         <View className='px-4 pb-3'>
           <TextInput
-            className="bg-zinc-700 px-2 py-2 text-base rounded-xl
+            className="bg-neutral-700 px-2 py-2 text-base rounded-xl
             leading-5 text-white"
             placeholder="Search users by name"
             value={searchUser}
@@ -93,24 +135,41 @@ export default function addUserModal() {
             onChangeText={(searchUser) => setSearchUser(searchUser)}
           />
         </View>
-        <ScrollView className='px-4'>
+        <View className='px-4'>
           {showSpinner ?
             <View className='pt-32'>
               <ActivityIndicator size='large' />
             </View>
-            : usersData?.map((user, index) => {
-              return (
-                <View key={index} className="py-3">
-                  <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
-                    createRandomString(38);
-                    createNewConvo([userId, user.clerkId], randomStringId);
-                  }}>
-                    <Text className='text-gray-50 text-base font-bold'>{user.firstName}</Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            })}
-        </ScrollView>
+            :
+            <View className='pb-12'>
+              <FlatList
+                data={usersData}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          }
+          {showSpinner ?
+            <View className='pt-32'>
+              <ActivityIndicator size='large' />
+            </View>
+            :
+            <View>
+              <Text className='text-neutral-500 text-base px-4 font-bold'>Your WhatsLeft Contacts</Text>
+              <FlatList
+                data={contacts}
+                keyExtractor={(item, index) => index + ''}
+                renderItem={({ item }) => (
+                  <View className="py-3">
+                    <TouchableOpacity className='p-3 bg-[#2e2e2e] rounded-xl flex-row' onPress={() => {
+                    }}>
+                      <Text className='text-gray-50 text-base font-bold'>{item.firstName}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+            </View>}
+        </View>
       </View>
     </SafeAreaView>
   )

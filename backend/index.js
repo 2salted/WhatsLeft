@@ -123,10 +123,8 @@ app.post("/user", async (req, res) => {
 
 app.post(
   "/upload",
-  bodyParser.raw({ type: ["image/jpeg", "image/png"], limit: "50mb" }),
+  bodyParser.raw({ type: ["image/jpeg", "image/png"], limit: "10mb" }),
   async (req, res) => {
-    console.log(req.body)
-
     const bucket = "whatsleft";
     const exists = await minioClient.bucketExists(bucket);
     if (exists) {
@@ -135,11 +133,9 @@ app.post(
       await minioClient.makeBucket(bucket);
       console.log("Bucket " + bucket + " created.");
     }
-
     var metaData = {
       "Content-Type": req.get("content-type"),
     };
-
     const sourceFile = req.body;
     const randomName = Math.random().toString(36).substring(7);
     if (req.get("content-type") === "image/jpeg") {
@@ -208,6 +204,10 @@ async function createUser(client, newUser) {
     .insertOne(newUser);
   console.log(`New user created with the following id: ${result.insertedId}`);
 }
+
+app.post('/fetchContacts', async (req, res) => {
+  const clerkId = req.body.clerkId
+})
 
 app.listen(port, async () => {
   try {
