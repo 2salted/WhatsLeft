@@ -11,19 +11,23 @@ type User = {
   user: object
 }
 
+type Contact = {
+  firstName: string
+}
+
 export default function addUserModal() {
   let randomStringId = "";
   const [searchUser, setSearchUser] = useState<string>("");
   const [usersData, setUsersData] = useState<User[] | undefined>(undefined);
   const [showSpinner, setShowSpinner] = useState<boolean>(false)
-  const [contacts, setContacts] = useState<Array<any>>();
+  const [contacts, setContacts] = useState<Contact[]>();
   const { userId, isLoaded } = useAuth();
 
   if (!isLoaded || !userId) {
     return null;
   }
 
-  async function createNewConvo(users: Array<any>, id: string) {
+  async function createNewConvo(users: User[], id: string) {
     setShowSpinner(true)
     try {
       await fetch('http://192.168.0.148:3000/createConvo', {
