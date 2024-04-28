@@ -1,10 +1,18 @@
+"use strict";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, Pressable, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  Pressable,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 export default function settings() {
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
   const [showSpinner2, setShowSpinner2] = useState(false);
   const { isLoaded, userId, sessionId, signOut } = useAuth();
@@ -15,38 +23,38 @@ export default function settings() {
   }
 
   const checkForImage = async (userId: string) => {
-    setShowSpinner2(true)
+    setShowSpinner2(true);
     try {
-      const response = await fetch('http://192.168.0.148:3000/findImage', {
-        method: 'POST',
+      const response = await fetch("http://192.168.0.148:3000/findImage", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId })
+        body: JSON.stringify({ userId }),
       });
       const data = await response.json();
-      setImage(data.pfp)
-      return data
+      setImage(data.pfp);
+      return data;
     } catch (error) {
-      setShowSpinner2(false)
-      console.error('Error:', error);
+      setShowSpinner2(false);
+      console.error("Error:", error);
     }
-  }
+  };
 
   const checkClerkIdExists = async (clerkId: string) => {
     try {
       const response = await fetch(`http://192.168.0.148:3000/${clerkId}`);
       if (!response.ok) {
-        throw new Error('Failed to check clerk ID');
+        throw new Error("Failed to check clerk ID");
       }
       const data = await response.json();
-      console.log('Clerk ID exists:', data.exists);
+      console.log("Clerk ID exists:", data.exists);
       if (!data.exists && sessionId) {
-        console.log('Clerk ID exists:', data.exists);
-        fetch('http://192.168.0.148:3000/user', {
-          method: 'POST',
+        console.log("Clerk ID exists:", data.exists);
+        fetch("http://192.168.0.148:3000/user", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             firstName: user?.firstName,
@@ -54,16 +62,16 @@ export default function settings() {
             clerkId: userId,
           }),
         })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Success:', data);
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
           })
-          .catch(error => {
-            console.error('Error:', error);
+          .catch((error) => {
+            console.error("Error:", error);
           });
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -78,85 +86,103 @@ export default function settings() {
     });
 
     if (!result.canceled) {
-      sendImageToApi(result.assets[0].base64, result.assets[0].mimeType)
+      sendImageToApi(
+        result.assets[0].base64 ?? "",
+        result.assets[0].mimeType ?? "",
+      );
     }
   };
 
-  async function sendImageToApi(base64: any, type: any) {
+  async function sendImageToApi(base64: string, type: string) {
     setShowSpinner(true);
     try {
       let dataUrl = "data:application/octet-binary;base64," + base64;
       await fetch(dataUrl)
-        .then(async res => await res.arrayBuffer())
-        .then(async buffer => {
-          if (type === 'image/png' || type === 'image/jpeg') {
-            const response = await fetch('http://192.168.0.148:3000/upload', {
-              method: 'POST',
+        .then(async (res) => await res.arrayBuffer())
+        .then(async (buffer) => {
+          if (type === "image/png" || type === "image/jpeg") {
+            const response = await fetch("http://192.168.0.148:3000/upload", {
+              method: "POST",
               headers: {
-                'Content-Type': type,
+                "Content-Type": type,
               },
-              body: new Uint8Array(buffer)
-            })
+              body: new Uint8Array(buffer),
+            });
             const data = await response.json();
             if (data) {
-              const imageURL = data.imageURL
-              const mongoUpload = await fetch('http://192.168.0.148:3000/uploadToMongo', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
+              const imageURL = data.imageURL;
+              const mongoUpload = await fetch(
+                "http://192.168.0.148:3000/uploadToMongo",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ userId, imageURL }),
                 },
-                body: JSON.stringify({ userId, imageURL })
-              })
-              const imageResult = await mongoUpload.json()
-              setShowSpinner(false)
-              return imageResult
+              );
+              const imageResult = await mongoUpload.json();
+              setShowSpinner(false);
+              return imageResult;
             }
           }
-        })
+        });
     } catch (err) {
-      setShowSpinner(false)
-      console.log("error", err)
+      setShowSpinner(false);
+      console.log("error", err);
     }
   }
 
   useEffect(() => {
-    checkClerkIdExists(userId)
+    checkClerkIdExists(userId);
     checkForImage(userId).then(() => {
-      setShowSpinner2(false)
-    })
+      setShowSpinner2(false);
+    });
   }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-black">
-      <Text className='text-gray-50 text-4xl font-bold px-5'>Settings</Text>
-      {showSpinner ?
+      <Text className="text-gray-50 text-4xl font-bold px-5">Settings</Text>
+      {showSpinner ? (
         <View className="py-36">
-          <ActivityIndicator size='large' />
+          <ActivityIndicator size="large" />
         </View>
-        :
+      ) : (
         <View>
           <View className="px-5 py-3">
             <View className="bg-zinc-800 rounded-lg p-3 flex-row">
               <Pressable onPress={pickImage}>
-                {showSpinner2 ?
+                {showSpinner2 ? (
                   <View className="p-5">
-                    <ActivityIndicator size='small' />
+                    <ActivityIndicator size="small" />
                   </View>
-                  : !image ?
-                    <Image source={require('../../assets/images/defaultImage.png')} className="rounded-full h-14 w-14" />
-                    :
-                    <Image source={{ uri: image }} className="h-14 w-14 rounded-full" />}
+                ) : !image ? (
+                  <Image
+                    source={require("../../assets/images/defaultImage.png")}
+                    className="rounded-full h-14 w-14"
+                  />
+                ) : (
+                  <Image
+                    source={{ uri: image }}
+                    className="h-14 w-14 rounded-full"
+                  />
+                )}
               </Pressable>
               <View className="pl-3 justify-center">
-                <Text className="text-gray-50 text-xl capitalize leading-6">{user?.firstName}</Text>
-                <Text className="text-zinc-500 text-lg leading-6">Available</Text>
+                <Text className="text-gray-50 text-xl capitalize leading-6">
+                  {user?.firstName}
+                </Text>
+                <Text className="text-zinc-500 text-lg leading-6">
+                  Available
+                </Text>
               </View>
             </View>
           </View>
           <Pressable
             onPress={() => {
               signOut();
-            }}>
+            }}
+          >
             <View className=" px-5 py-2">
               <View className="items-center p-2.5 bg-zinc-800 rounded-lg">
                 <Text className="text-lg font-bold text-red-600">Sign Out</Text>
@@ -164,11 +190,12 @@ export default function settings() {
             </View>
           </Pressable>
           <View>
-            <Text className="text-center p-2 text-sm text-zinc-700">App version: 1.1.0</Text>
+            <Text className="text-center p-2 text-sm text-zinc-700">
+              App version: 1.1.0
+            </Text>
           </View>
         </View>
-      }
-
+      )}
     </SafeAreaView>
   );
-};
+}

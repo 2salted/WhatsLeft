@@ -1,5 +1,12 @@
+"use strict";
 import React from "react";
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSignIn } from "@clerk/clerk-expo";
 
 export default function SignInScreen({ setTest }: any) {
@@ -28,7 +35,9 @@ export default function SignInScreen({ setTest }: any) {
   return (
     <SafeAreaView className="flex-1 bg-black items-center">
       <View className="w-11/12">
-        <Text className="text-white text-4xl font-bold pt-12 pb-3">Sign In</Text>
+        <Text className="text-white text-4xl font-bold pt-12 pb-3">
+          Sign In
+        </Text>
         <View className="py-3">
           <TextInput
             className="bg-zinc-700 px-2 py-3 text-base rounded-xl
@@ -54,7 +63,12 @@ export default function SignInScreen({ setTest }: any) {
         </View>
 
         <View className="justify-between py-2 flex-row">
-          <TouchableOpacity className="px-3" onPress={() => { setTest(false) }}>
+          <TouchableOpacity
+            className="px-3"
+            onPress={() => {
+              setTest(false);
+            }}
+          >
             <Text className="text-blue-500 font-bold text-lg">Back</Text>
           </TouchableOpacity>
           <TouchableOpacity className="px-3" onPress={onSignInPress}>

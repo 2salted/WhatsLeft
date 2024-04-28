@@ -1,17 +1,19 @@
-import { ClerkProvider, SignedIn, SignedOut, useAuth, useUser } from '@clerk/clerk-expo';
-import { Stack } from 'expo-router/stack';
+"use strict";
+
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { Stack } from "expo-router/stack";
 const clerkApiKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 import React from "react";
-import SignUpScreen from '@/components/SignUpScreen';
-import SignInScreen from '../components/SignInScreen';
+import SignUpScreen from "@/components/SignUpScreen";
+import SignInScreen from "../components/SignInScreen";
 import * as SecureStore from "expo-secure-store";
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
-import { Pressable, Text, View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
+import { View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
-export default function AppLayout() {
-  const [test, setTest] = React.useState(false);
+export default function AppLayout(): React.JSX.Element {
+  const [test, setTest] = React.useState<boolean>(false);
   const tokenCache = {
     async getToken(key: string) {
       try {
@@ -32,42 +34,42 @@ export default function AppLayout() {
     <ClerkProvider tokenCache={tokenCache} publishableKey={clerkApiKey!}>
       <ExpoStatusBar hidden={false} translucent={false} style="light" />
       <SignedIn>
-        <ExpoStatusBar style='light' hidden={false} />
+        <ExpoStatusBar style="light" hidden={false} />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="addUserModal"
             options={{
-              presentation: 'modal',
+              presentation: "modal",
               headerTitle: "New Message",
-              headerTitleStyle: { color: 'white' },
+              headerTitleStyle: { color: "white" },
               headerShadowVisible: false,
-              headerLeft: () => (
-                <View>
-                </View>
-              ),
+              headerLeft: () => <View></View>,
               headerRight: () => (
                 <View>
                   <Link href="/">
-                    <FontAwesome name='close'
-                      size={20} style={{ color: 'white' }} />
+                    <FontAwesome
+                      name="close"
+                      size={20}
+                      style={{ color: "white" }}
+                    />
                   </Link>
                 </View>
               ),
               headerStyle: {
-                backgroundColor: '#1e1e1e'
-              }
+                backgroundColor: "#1e1e1e",
+              },
             }}
           />
         </Stack>
       </SignedIn>
       <SignedOut>
-        <ExpoStatusBar style='light' hidden={false} />
-        {
-          test === false ?
-            <SignUpScreen setTest={setTest} />
-            : <SignInScreen setTest={setTest} />
-        }
+        <ExpoStatusBar style="light" hidden={false} />
+        {test === false ? (
+          <SignUpScreen setTest={setTest} />
+        ) : (
+          <SignInScreen setTest={setTest} />
+        )}
       </SignedOut>
     </ClerkProvider>
   );

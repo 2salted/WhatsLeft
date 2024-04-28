@@ -1,3 +1,4 @@
+"use strict";
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -44,7 +45,7 @@ app.post("/personalMessages", async (req, res) => {
         .toArray();
       res.json(findingUsersConvo);
     } else {
-      res.json({ exists: false });
+      res.json([]);
     }
   } catch (error) {
     console.error(error);
@@ -52,7 +53,7 @@ app.post("/personalMessages", async (req, res) => {
   }
 });
 
-app.get("/search", async (req, res) => {
+app.get("/search", async (_, res) => {
   try {
     const searchResult = await client
       .db("whatsleft")
@@ -149,53 +150,68 @@ app.post(
       bucket,
       destinationObject,
       sourceFile,
-      metaData
+      metaData,
     );
 
     console.log(
       "File " +
-      " uploaded as object " +
-      destinationObject +
-      " in bucket " +
-      bucket
+        " uploaded as object " +
+        destinationObject +
+        " in bucket " +
+        bucket,
     );
 
     const imageURL = `http://192.168.0.148:9000/${bucket}/${destinationObject}`;
-    console.log(imageURL)
-    res.send({ imageURL: imageURL })
-  }
+    console.log(imageURL);
+    res.send({ imageURL: imageURL });
+  },
 );
 
-app.post('/findImage', async (req, res) => {
-  const clerkId = req.body.userId
+app.post("/findImage", async (req, res) => {
+  const clerkId = req.body.userId;
   try {
-    const user = await client.db("whatsleft").collection("users").findOne({ clerkId })
+    const user = await client
+      .db("whatsleft")
+      .collection("users")
+      .findOne({ clerkId });
     if (user && user.pfp) {
       res.send({ success: true, pfp: user.pfp });
     } else {
-      res.send({ success: false, message: 'Profile picture not found for the user.' });
+      res.send({
+        success: false,
+        message: "Profile picture not found for the user.",
+      });
     }
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
-})
+});
 
-app.post('/uploadToMongo', async (req, res) => {
-  const clerkId = req.body.userId
-  const imageURL = req.body.imageURL
+app.post("/uploadToMongo", async (req, res) => {
+  const clerkId = req.body.userId;
+  const imageURL = req.body.imageURL;
 
   try {
-    const user = await client.db("whatsleft").collection("users").findOne({ clerkId })
+    const user = await client
+      .db("whatsleft")
+      .collection("users")
+      .findOne({ clerkId });
     if (user) {
-      await client.db("whatsleft").collection("users").updateOne({ clerkId }, { $set: { pfp: imageURL } })
-      res.send({ success: true, message: 'Profile picture added successfully.' })
+      await client
+        .db("whatsleft")
+        .collection("users")
+        .updateOne({ clerkId }, { $set: { pfp: imageURL } });
+      res.send({
+        success: true,
+        message: "Profile picture added successfully.",
+      });
     }
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-})
+});
 
 async function createUser(client, newUser) {
   const result = await client
@@ -205,16 +221,16 @@ async function createUser(client, newUser) {
   console.log(`New user created with the following id: ${result.insertedId}`);
 }
 
-app.post('/fetchContacts', async (req, res) => {
-  const clerkId = req.body.clerkId
-})
+app.post("/fetchContacts", async (req, res) => {
+  const clerkId = req.body.clerkId;
+});
 
 app.listen(port, async () => {
   try {
     await client.connect();
     await client.db("whatsleft").command({ ping: 1 });
     console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
+      "Pinged your deployment. You successfully connected to MongoDB!",
     );
   } catch (err) {
     console.log("MongoDB Error:", err);
