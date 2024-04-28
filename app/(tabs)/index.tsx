@@ -14,7 +14,7 @@ import {
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
   const [convoSearch, setConvoSearch] = useState<string>("");
-  const [messages] = useState<{ firstName: string }[]>([]);
+  const [messages, setMessages] = useState<{ firstName: string }[]>([]);
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const { user } = useUser();
 
@@ -71,7 +71,7 @@ export default function Tab() {
       );
       const data: { clerkId: string; firstName: string }[] =
         await response.json();
-      data.filter((item) => item.clerkId !== userId);
+      setMessages(data.filter((item) => item.clerkId !== userId));
       setShowSpinner(false);
       return data;
     } catch (error) {

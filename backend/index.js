@@ -155,10 +155,10 @@ app.post(
 
     console.log(
       "File " +
-        " uploaded as object " +
-        destinationObject +
-        " in bucket " +
-        bucket,
+      " uploaded as object " +
+      destinationObject +
+      " in bucket " +
+      bucket,
     );
 
     const imageURL = `http://192.168.0.148:9000/${bucket}/${destinationObject}`;
