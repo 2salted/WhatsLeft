@@ -145,8 +145,7 @@ export default function settings() {
                   : !image ?
                     <Image source={require('../../assets/images/defaultImage.png')} className="rounded-full h-14 w-14" />
                     :
-                    <Image source={{ uri: image }} className="h-14 w-14 rounded-full" />
-                }
+                    <Image source={{ uri: image }} className="h-14 w-14 rounded-full" />}
               </Pressable>
               <View className="pl-3 justify-center">
                 <Text className="text-gray-50 text-xl capitalize leading-6">{user?.firstName}</Text>
