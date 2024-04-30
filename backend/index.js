@@ -36,6 +36,7 @@ app.post("/personalMessages", async (req, res) => {
       .collection("conversations")
       .find({ users: { $in: idToSearch } })
       .toArray();
+
     if (searchResult && searchResult.length > 0) {
       const userIdConvo = searchResult.map((item) => item.users).flat();
       const findingUsersConvo = await client
@@ -43,6 +44,9 @@ app.post("/personalMessages", async (req, res) => {
         .collection("users")
         .find({ clerkId: { $in: userIdConvo } })
         .toArray();
+
+      console.log(findingUsersConvo)
+
       res.json(findingUsersConvo);
     } else {
       res.json([]);
@@ -52,6 +56,14 @@ app.post("/personalMessages", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.post('/getConvoPfp', async (req, res) => {
+  try {
+
+  } catch {
+
+  }
+})
 
 app.get("/search", async (_, res) => {
   try {
