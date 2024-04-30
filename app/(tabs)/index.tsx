@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import {
   Text,
   SafeAreaView,
-  ScrollView,
   View,
   TextInput,
   ActivityIndicator,
   Image,
+  FlatList,
 } from "react-native";
 
 type User = {
@@ -100,54 +100,60 @@ export default function Tab() {
           headerShadowVisible: false,
         }}
       />
-      <ScrollView>
-        <Text className="text-gray-50 text-4xl font-bold px-5">Chats</Text>
-        <View className="px-4 pb-3 pt-3">
-          <TextInput
-            className="bg-zinc-800 px-2 py-2 text-base rounded-xl
-            leading-5 text-white"
-            placeholder="Search..."
-            value={convoSearch}
-            placeholderTextColor="#8e8e8e"
-            onChangeText={(searchConvo) => setConvoSearch(searchConvo)}
-          />
-          <View className="pt-6">
-            {showSpinner ? (
-              <View className="items-center justify-center h-full">
-                <ActivityIndicator size="large" />
-              </View>
-            ) : messages.length > 0 ? (
-              messages.map((convo, index) => {
-                return (
-                  <View key={index} className="flex-row py-2 border border-white">
-                    <View className="">
-                      <Image source={require("../../assets/images/defaultImage.png")}
-                        className="rounded-full h-14 w-14"
-                      />
+      <View>
+        {showSpinner ? (
+          <View className="items-center justify-center h-full">
+            <ActivityIndicator size="large" />
+          </View>
+        ) :
+          <View style={{ width: '100%', height: '100%' }}>
+            <FlatList
+              data={messages}
+              renderItem={({ item }: { item: User; }) => (
+                <View className="flex-row py-3">
+                  <View className="pl-4">
+                    <Image source={require("../../assets/images/defaultImage.png")}
+                      className="rounded-full h-14 w-14"
+                    />
+                  </View>
+                  <View className="px-3">
+                    <View>
+                      <Text className="text-white capitalize font-bold text-base">
+                        {item.firstName + " " + item.lastName}
+                      </Text>
                     </View>
-                    <View className="px-3">
-                      <View>
-                        <Text className="text-white capitalize font-bold text-base">
-                          {convo.firstName + " " + convo.lastName}
-                        </Text>
-                      </View>
-                      <View>
-                        <Text className="text-white">Hello</Text>
-                      </View>
+                    <View>
+                      <Text className="text-white">Hello</Text>
                     </View>
                   </View>
-                );
-              })
-            ) : (
-              <View className="items-center justify-center pt-20">
-                <Text className="text-gray-50 font-bold text-xl">
-                  No Messages
-                </Text>
-              </View>
-            )}
+                </View>
+              )}
+              ListEmptyComponent={
+                <View className="items-center justify-center pt-20">
+                  <Text className="text-gray-50 font-bold text-xl">
+                    No Messages
+                  </Text>
+                </View>
+              }
+              ListHeaderComponent={
+                <View className="py-3">
+                  <Text className="text-gray-50 text-4xl font-bold px-5">Chats</Text>
+                  <View className="px-4 pt-2">
+                    <TextInput
+                      className="bg-zinc-800 px-2 py-2 text-base rounded-xl
+                      leading-5 text-white"
+                      placeholder="Search..."
+                      value={convoSearch}
+                      placeholderTextColor="#8e8e8e"
+                      onChangeText={(searchConvo) => setConvoSearch(searchConvo)}
+                    />
+                  </View>
+                </View>
+              }
+            />
           </View>
-        </View>
-      </ScrollView>
+        }
+      </View>
     </SafeAreaView>
   );
 }
