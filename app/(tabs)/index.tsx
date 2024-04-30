@@ -88,12 +88,12 @@ export default function Tab(): React.JSX.Element {
     }
   }
 
-  console.log(messages)
+  let matchedSearchQuery = messages.filter((item) => item.firstName.toLowerCase().includes(convoSearch.toLowerCase()))
 
   useEffect(() => {
     checkClerkIdExists(userId);
     checkPersonalMessages([userId]);
-  }, [convoSearch]);
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-black">
@@ -111,7 +111,7 @@ export default function Tab(): React.JSX.Element {
         ) :
           <View style={{ width: '100%', height: '100%' }}>
             <FlatList
-              data={messages}
+              data={matchedSearchQuery}
               renderItem={({ item }: { item: User; }) => (
                 <View className="flex-row py-3">
                   <View className="pl-4">
