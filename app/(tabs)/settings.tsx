@@ -170,7 +170,7 @@ export default function settings() {
               </Pressable>
               <View className="pl-3 justify-center">
                 <Text className="text-gray-50 text-xl capitalize leading-6">
-                  {user?.firstName}
+                  {user?.firstName} {user?.lastName}
                 </Text>
                 <Text className="text-zinc-500 text-lg leading-6">
                   Available

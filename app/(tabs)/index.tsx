@@ -16,9 +16,10 @@ type User = {
   firstName: string;
   lastName: string;
   clerkId: string;
+  pfp: string;
 };
 
-export default function Tab() {
+export default function Tab(): React.JSX.Element {
   const { isLoaded, userId, sessionId } = useAuth();
   const [convoSearch, setConvoSearch] = useState<string>("");
   const [messages, setMessages] = useState<User[]>([]);
@@ -26,7 +27,7 @@ export default function Tab() {
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
-    return null;
+    return <View></View>
   }
 
   const checkClerkIdExists = async (clerkId: string) => {
@@ -87,6 +88,8 @@ export default function Tab() {
     }
   }
 
+  console.log(messages)
+
   useEffect(() => {
     checkClerkIdExists(userId);
     checkPersonalMessages([userId]);
@@ -112,9 +115,15 @@ export default function Tab() {
               renderItem={({ item }: { item: User; }) => (
                 <View className="flex-row py-3">
                   <View className="pl-4">
-                    <Image source={require("../../assets/images/defaultImage.png")}
-                      className="rounded-full h-14 w-14"
-                    />
+                    {
+                      item.pfp ?
+                        <Image source={{ uri: item.pfp }}
+                          className="rounded-full h-14 w-14"
+                        /> :
+                        <Image source={require("../../assets/images/defaultImage.png")}
+                          className="rounded-full h-14 w-14"
+                        />
+                    }
                   </View>
                   <View className="px-3">
                     <View>

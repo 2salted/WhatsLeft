@@ -57,14 +57,6 @@ app.post("/personalMessages", async (req, res) => {
   }
 });
 
-app.post('/getConvoPfp', async (req, res) => {
-  try {
-
-  } catch {
-
-  }
-})
-
 app.get("/search", async (_, res) => {
   try {
     const searchResult = await client
