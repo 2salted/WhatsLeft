@@ -184,7 +184,7 @@ export default function addUserModal(): React.JSX.Element {
                   <View className="py-3">
                     <TouchableOpacity
                       className="p-3 bg-[#2e2e2e] rounded-xl flex-row"
-                      onPress={() => {}}
+                      onPress={() => { }}
                     >
                       <Text className="text-gray-50 text-base font-bold">
                         {item.firstName}

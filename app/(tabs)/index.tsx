@@ -9,12 +9,19 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  Image,
 } from "react-native";
+
+type User = {
+  firstName: string;
+  lastName: string;
+  clerkId: string;
+};
 
 export default function Tab() {
   const { isLoaded, userId, sessionId } = useAuth();
   const [convoSearch, setConvoSearch] = useState<string>("");
-  const [messages, setMessages] = useState<{ firstName: string }[]>([]);
+  const [messages, setMessages] = useState<User[]>([]);
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const { user } = useUser();
 
@@ -69,7 +76,7 @@ export default function Tab() {
           body: JSON.stringify({ userIdEndPoint }),
         },
       );
-      const data: { clerkId: string; firstName: string }[] =
+      const data: User[] =
         await response.json();
       setMessages(data.filter((item) => item.clerkId !== userId));
       setShowSpinner(false);
@@ -110,11 +117,25 @@ export default function Tab() {
                 <ActivityIndicator size="large" />
               </View>
             ) : messages.length > 0 ? (
-              messages?.map((convo, index) => {
+              messages.map((convo, index) => {
                 return (
-                  <Text key={index} className="text-gray-50">
-                    {convo.firstName}
-                  </Text>
+                  <View key={index} className="flex-row py-2 border border-white">
+                    <View className="">
+                      <Image source={require("../../assets/images/defaultImage.png")}
+                        className="rounded-full h-14 w-14"
+                      />
+                    </View>
+                    <View className="px-3">
+                      <View>
+                        <Text className="text-white capitalize font-bold text-base">
+                          {convo.firstName + " " + convo.lastName}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text className="text-white">Hello</Text>
+                      </View>
+                    </View>
+                  </View>
                 );
               })
             ) : (
