@@ -45,8 +45,6 @@ app.post("/personalMessages", async (req, res) => {
         .find({ clerkId: { $in: userIdConvo } })
         .toArray();
 
-      console.log(findingUsersConvo)
-
       res.json(findingUsersConvo);
     } else {
       res.json([]);

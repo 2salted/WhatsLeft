@@ -88,7 +88,7 @@ export default function Tab(): React.JSX.Element {
     }
   }
 
-  let matchedSearchQuery = messages.filter((item) => item.firstName.toLowerCase().includes(convoSearch.toLowerCase()))
+  let matchedSearchQuery = messages.filter((item: User) => item.firstName.toLowerCase().includes(convoSearch.toLowerCase()))
 
   useEffect(() => {
     checkClerkIdExists(userId);
