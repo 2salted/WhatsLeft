@@ -86,7 +86,7 @@ export default function settings() {
     });
 
     if (!result.canceled) {
-      sendImageToApi(
+      await sendImageToApi(
         result.assets[0].base64 ?? "",
         result.assets[0].mimeType ?? "",
       );
@@ -94,6 +94,7 @@ export default function settings() {
   };
 
   async function sendImageToApi(base64: string, type: string) {
+    console.log(base64, "base64")
     setShowSpinner(true);
     try {
       let dataUrl = "data:application/octet-binary;base64," + base64;
@@ -109,6 +110,7 @@ export default function settings() {
               body: new Uint8Array(buffer),
             });
             const data = await response.json();
+            console.log("data", data)
             if (data) {
               const imageURL = data.imageURL;
               const mongoUpload = await fetch(
@@ -123,13 +125,14 @@ export default function settings() {
               );
               const imageResult = await mongoUpload.json();
               setShowSpinner(false);
+              console.log("image result", imageResult)
               return imageResult;
             }
           }
         });
     } catch (err) {
       setShowSpinner(false);
-      console.log("error", err);
+      console.log("Image upload error", err);
     }
   }
 
