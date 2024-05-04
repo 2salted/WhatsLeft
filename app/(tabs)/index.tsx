@@ -1,6 +1,6 @@
 "use strict";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Text,
@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Image,
   FlatList,
+  Pressable,
 } from "react-native";
 
 type User = {
@@ -113,29 +114,33 @@ export default function Tab(): React.JSX.Element {
             <FlatList
               data={matchedSearchQuery}
               renderItem={({ item }: { item: User; }) => (
-                <View className="flex-row py-3">
-                  <View className="pl-4">
-                    {
-                      item.pfp ?
-                        <Image source={{ uri: item.pfp }}
-                          className="rounded-full h-14 w-14"
-                        /> :
-                        <Image source={require("../../assets/images/defaultImage.png")}
-                          className="rounded-full h-14 w-14"
-                        />
-                    }
-                  </View>
-                  <View className="px-3">
-                    <View>
-                      <Text className="text-white capitalize font-bold text-base">
-                        {item.firstName + " " + item.lastName}
-                      </Text>
+                <Pressable onPress={() => {
+                  router.push(`/${item.clerkId}`)
+                }}>
+                  <View className="flex-row py-3">
+                    <View className="pl-4">
+                      {
+                        item.pfp ?
+                          <Image source={{ uri: item.pfp }}
+                            className="rounded-full h-14 w-14"
+                          /> :
+                          <Image source={require("../../assets/images/defaultImage.png")}
+                            className="rounded-full h-14 w-14"
+                          />
+                      }
                     </View>
-                    <View>
-                      <Text className="text-white">Hello</Text>
+                    <View className="px-3">
+                      <View>
+                        <Text className="text-white capitalize font-bold text-base">
+                          {item.firstName + " " + item.lastName}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text className="text-white">Hello</Text>
+                      </View>
                     </View>
                   </View>
-                </View>
+                </Pressable>
               )}
               ListEmptyComponent={
                 <View className="items-center justify-center pt-20">

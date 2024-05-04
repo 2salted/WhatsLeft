@@ -28,6 +28,24 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 
+app.post('/dms', async (req, res) => {
+  try {
+    const clerkId = req.body.userId
+    const otherClerkId = req.body.otherUserId
+    const searchResult = await client
+      .db("whatsleft")
+      .collection("conversations")
+      .findOne({ users: { $all: [clerkId, otherClerkId] } })
+    const findOtherUser = await client.db("whatsleft").collection("users").findOne({ clerkId: otherClerkId });
+    if (searchResult.messages) {
+      res.json({ otherUser: findOtherUser, messages: [""] })
+    } else {
+      res.json({ otherUser: findOtherUser, messages: [""] })
+    }
+  } catch {
+  }
+})
+
 app.post("/personalMessages", async (req, res) => {
   try {
     const idToSearch = req.body.userIdEndPoint;
