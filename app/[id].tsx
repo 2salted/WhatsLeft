@@ -55,7 +55,7 @@ export default function Messaging(): React.JSX.Element {
   useEffect(() => {
     checkForImage(otherUserId)
     get15Messages(userId ?? "", otherUserId)
-  })
+  }, [])
 
   return (
     <SafeAreaView className="flex-1 bg-black">
@@ -84,8 +84,10 @@ export default function Messaging(): React.JSX.Element {
             </View>
           ),
           headerRight: () => (
-            <View>
-              <FontAwesome style={{ color: "white", fontSize: 25, paddingRight: 15 }} name="phone" />
+            <View className="pr-7">
+              <TouchableOpacity>
+                <FontAwesome style={{ color: "white", fontSize: 25 }} name="phone" />
+              </TouchableOpacity>
             </View>
           ),
           headerBackTitle: "",
