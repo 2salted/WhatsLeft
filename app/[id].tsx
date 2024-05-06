@@ -21,7 +21,7 @@ export default function Messaging(): React.JSX.Element {
   const [image, setImage] = useState<string>("")
   const [receiverUserInfo, setreceiverUserInfo] = useState<User>()
   const [userMessage, setUserMessage] = useState<string>();
-  const [allMessages, setAllMessages] = useState([{}]);
+  const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
   const socket = useRef<Socket | null>(null)
 
   const [socketID, setSocketID] = useState<string | undefined>();
@@ -34,10 +34,10 @@ export default function Messaging(): React.JSX.Element {
   console.log(userMessage);
 
   useEffect(() => {
-    console.log("trying to connect")
     socket.current = io(`http://192.168.0.148:${8000}`)
     const onConnect = () => {
       console.log(`Connected to server! Socket ID: ${socket.current?.id}`)
+      socket.current?.emit("userId", userId)
 
       setSocketID(socket.current?.id);
       setIsConnected(true);
@@ -48,25 +48,21 @@ export default function Messaging(): React.JSX.Element {
 
       setSocketID("");
       setIsConnected(false);
-      setServerResponse("");
     }
 
-    const onServerResponse = (value: any) => setServerResponse(value);
 
     socket.current.on("connect", onConnect);
     socket.current.on("disconnect", onDisconnect);
-    socket.current.on("serverResponse", onServerResponse);
+    socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
+      setAllMessages([...allMessages, message])
+      console.log(message);
+    })
 
     return () => {
       socket.current?.off("connect", onConnect);
       socket.current?.off("disconnect", onDisconnect);
-      socket.current?.off("serverResponse", onServerResponse);
     }
   }, []);
-
-  const onClickHandler = () => {
-    socket.current?.emit("sendEvent");
-  }
 
   async function get15Messages(userId: string, otherUserId: any) {
     try {
@@ -147,7 +143,7 @@ export default function Messaging(): React.JSX.Element {
           }}
         />
         <View className="flex-1 justify-center items-center gap-4">
-          <Text></Text>
+          <Text className="text-gray-50">asd</Text>
         </View>
       </SafeAreaView>
       <KeyboardAvoidingView
@@ -163,8 +159,11 @@ export default function Messaging(): React.JSX.Element {
                 onChangeText={(message) => setUserMessage(message)}
               />
             </View>
-            <TouchableOpacity className="rounded-full justify-center bg-green-500" onPress={() => {
-              setUserMessage(userMessage);
+            <TouchableOpacity className="rounded-full justify-center bg-green-500" onPressOut={() => {
+              socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: any) => {
+                setAllMessages([...allMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])
+                setUserMessage("");
+              });
             }}>
               <Ionicons name="send" size={20} color="black" style={{ marginRight: 6, marginLeft: 10 }} />
             </TouchableOpacity>

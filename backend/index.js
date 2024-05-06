@@ -31,6 +31,8 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 
+let socketCache = new Map()
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -40,24 +42,16 @@ const io = new Server(httpServer, {
 
 app.use(cors());
 
-let count = 0;
-const incrementCount = () => {
-  count++;
-  console.log(`Incremented Count: ${count}`);
-}
-
-console.log("this code is being ran")
-
 io.on("connection", (socket) => {
-  console.log("this code is also being ran")
+  socket.on("userId", (userId) => {
+    socketCache.set(userId, socket.id);
+  })
   console.log(`A user connected. Socket ID: ${socket.id}`);
 
-  socket.emit("serverResponse", count);
-
-  socket.on("sendEvent", () => {
-    incrementCount();
-
-    io.emit("serverResponse", count);
+  socket.on("sendMessage", (req) => {
+    console.log(req)
+    const otherUserSocketId = socketCache.get(req.otherUserId);
+    socket.to(otherUserSocketId).emit("newMessage", req);
   });
 });
 
