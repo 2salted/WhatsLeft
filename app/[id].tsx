@@ -1,4 +1,4 @@
-import { Button, FlatList, Image, KeyboardAvoidingView, Platform, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Stack } from "expo-router/stack";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/clerk-expo";
@@ -23,15 +23,13 @@ export default function Messaging(): React.JSX.Element {
   const [userMessage, setUserMessage] = useState<string>();
   const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
   const socket = useRef<Socket | null>(null)
-
   const [socketID, setSocketID] = useState<string | undefined>();
   const [isConnected, setIsConnected] = useState(false);
-  const [serverResponse, setServerResponse] = useState("");
 
-  console.log(socketID);
-  console.log(isConnected);
-  console.log(serverResponse);
-  console.log(userMessage);
+  console.log("socketId", socketID);
+  console.log("is connected", isConnected);
+  console.log("user message:", userMessage);
+  console.log("all messages:", allMessages);
 
   useEffect(() => {
     socket.current = io(`http://192.168.0.148:${8000}`)
@@ -50,12 +48,11 @@ export default function Messaging(): React.JSX.Element {
       setIsConnected(false);
     }
 
-
     socket.current.on("connect", onConnect);
     socket.current.on("disconnect", onDisconnect);
     socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
+      console.log(message)
       setAllMessages([...allMessages, message])
-      console.log(message);
     })
 
     return () => {
@@ -96,6 +93,10 @@ export default function Messaging(): React.JSX.Element {
       console.error("Error:", error);
     }
   };
+
+  let css = ""
+  Platform.OS === "ios" ? css = "bg-neutral-700 text-white p-2 rounded-full border border-neutral-600" :
+    css = "bg-neutral-700 text-white p-1 rounded-full border border-neutral-600"
 
   useEffect(() => {
     checkForImage(otherUserId)
@@ -143,7 +144,7 @@ export default function Messaging(): React.JSX.Element {
           }}
         />
         <View className="flex-1 justify-center items-center gap-4">
-          <Text className="text-gray-50">asd</Text>
+          <Text className="text-gray-50">{allMessages.map((message, index) => <Text key={index}>{message.message}</Text>)}</Text>
         </View>
       </SafeAreaView>
       <KeyboardAvoidingView
@@ -153,7 +154,7 @@ export default function Messaging(): React.JSX.Element {
           <View className="pb-4 flex-row">
             <View className="flex-1 pr-4">
               <TextInput
-                className="bg-neutral-700 text-white p-2 rounded-full border border-neutral-600"
+                className={css}
                 value={userMessage}
                 placeholderTextColor="#8e8e8e"
                 onChangeText={(message) => setUserMessage(message)}

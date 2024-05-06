@@ -36,7 +36,7 @@ let socketCache = new Map()
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*" // Allows from all sources. In production should not do this.
+    origin: "*"
   }
 });
 
@@ -45,12 +45,14 @@ app.use(cors());
 io.on("connection", (socket) => {
   socket.on("userId", (userId) => {
     socketCache.set(userId, socket.id);
+    console.log(socketCache);
+    console.log(socketCache);
   })
   console.log(`A user connected. Socket ID: ${socket.id}`);
 
   socket.on("sendMessage", (req) => {
-    console.log(req)
-    const otherUserSocketId = socketCache.get(req.otherUserId);
+    console.log("request", req)
+    const otherUserSocketId = socketCache.get(req.receiverId)
     socket.to(otherUserSocketId).emit("newMessage", req);
   });
 });
