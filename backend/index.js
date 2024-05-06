@@ -5,6 +5,9 @@ dotenv.config();
 import { MongoClient, ServerApiVersion } from "mongodb";
 import * as Minio from "minio";
 import bodyParser from "body-parser";
+import cors from "cors";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const uri = process.env.MONGODB_CONNECTION;
 
@@ -27,6 +30,43 @@ const minioClient = new Minio.Client({
 const app = express();
 app.use(express.json());
 const port = 3000;
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*" // Allows from all sources. In production should not do this.
+  }
+});
+
+app.use(cors());
+
+let count = 0;
+const incrementCount = () => {
+  count++;
+  console.log(`Incremented Count: ${count}`);
+}
+
+console.log("this code is being ran")
+
+io.on("connection", (socket) => {
+  console.log("this code is also being ran")
+  console.log(`A user connected. Socket ID: ${socket.id}`);
+
+  socket.emit("serverResponse", count);
+
+  socket.on("sendEvent", () => {
+    incrementCount();
+
+    io.emit("serverResponse", count);
+  });
+});
+
+if (8000) {
+  httpServer.listen(8000, () => console.log(`Server now live at http://localhost:${8000}`))
+}
+else {
+  httpServer.listen(8000, "192.168.0.148", () => console.log(`Development Server now live at http://192.168.0.148:${8000}`))
+}
 
 app.post('/dms', async (req, res) => {
   try {

@@ -1,10 +1,11 @@
-import { FlatList, Image, KeyboardAvoidingView, Platform, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Image, KeyboardAvoidingView, Platform, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Stack } from "expo-router/stack";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import { useLocalSearchParams } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from '@expo/vector-icons';
+import { Socket, io } from "socket.io-client";
 
 type User = {
   firstName: string;
@@ -20,7 +21,52 @@ export default function Messaging(): React.JSX.Element {
   const [image, setImage] = useState<string>("")
   const [receiverUserInfo, setreceiverUserInfo] = useState<User>()
   const [userMessage, setUserMessage] = useState<string>();
-  const [messages, setMessages] = useState<any>();
+  const [allMessages, setAllMessages] = useState([{}]);
+  const socket = useRef<Socket | null>(null)
+
+  const [socketID, setSocketID] = useState<string | undefined>();
+  const [isConnected, setIsConnected] = useState(false);
+  const [serverResponse, setServerResponse] = useState("");
+
+  console.log(socketID);
+  console.log(isConnected);
+  console.log(serverResponse);
+  console.log(userMessage);
+
+  useEffect(() => {
+    console.log("trying to connect")
+    socket.current = io(`http://192.168.0.148:${8000}`)
+    const onConnect = () => {
+      console.log(`Connected to server! Socket ID: ${socket.current?.id}`)
+
+      setSocketID(socket.current?.id);
+      setIsConnected(true);
+    }
+
+    const onDisconnect = () => {
+      console.log(`Disconnected from server!`)
+
+      setSocketID("");
+      setIsConnected(false);
+      setServerResponse("");
+    }
+
+    const onServerResponse = (value: any) => setServerResponse(value);
+
+    socket.current.on("connect", onConnect);
+    socket.current.on("disconnect", onDisconnect);
+    socket.current.on("serverResponse", onServerResponse);
+
+    return () => {
+      socket.current?.off("connect", onConnect);
+      socket.current?.off("disconnect", onDisconnect);
+      socket.current?.off("serverResponse", onServerResponse);
+    }
+  }, []);
+
+  const onClickHandler = () => {
+    socket.current?.emit("sendEvent");
+  }
 
   async function get15Messages(userId: string, otherUserId: any) {
     try {
@@ -59,8 +105,6 @@ export default function Messaging(): React.JSX.Element {
     checkForImage(otherUserId)
     get15Messages(userId ?? "", otherUserId)
   }, [])
-
-  console.log(messages)
 
   return (
     <View className="flex-1 bg-neutral-900">
@@ -102,13 +146,13 @@ export default function Messaging(): React.JSX.Element {
             headerShadowVisible: false,
           }}
         />
-        <View className="flex-1">
+        <View className="flex-1 justify-center items-center gap-4">
+          <Text></Text>
         </View>
       </SafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={60}
-      >
+        keyboardVerticalOffset={60}>
         <View className="bg-neutral-800 text-lg pb-6 pt-3 px-4 text-white">
           <View className="pb-4 flex-row">
             <View className="flex-1 pr-4">
@@ -120,7 +164,7 @@ export default function Messaging(): React.JSX.Element {
               />
             </View>
             <TouchableOpacity className="rounded-full justify-center bg-green-500" onPress={() => {
-              setMessages(userMessage)
+              setUserMessage(userMessage);
             }}>
               <Ionicons name="send" size={20} color="black" style={{ marginRight: 6, marginLeft: 10 }} />
             </TouchableOpacity>
