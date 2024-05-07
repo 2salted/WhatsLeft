@@ -194,7 +194,7 @@ export default function settings() {
           </Pressable>
           <View>
             <Text className="text-center p-2 text-sm text-zinc-700">
-              App version: 1.2.2
+              App version: 1.3.0
             </Text>
           </View>
         </View>

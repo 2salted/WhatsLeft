@@ -20,6 +20,7 @@ export default function Messaging(): React.JSX.Element {
   const otherUserId = userIdSecondObject.id
   const [image, setImage] = useState<string>("")
   const [receiverUserInfo, setreceiverUserInfo] = useState<User>()
+  const [messages, setMessages] = useState<[{}]>([{}])
   const [userMessage, setUserMessage] = useState<string>();
   const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
   const socket = useRef<Socket | null>(null)
@@ -67,9 +68,26 @@ export default function Messaging(): React.JSX.Element {
         body: JSON.stringify({ userId, otherUserId }),
       })
       const data = await response.json()
+      setMessages(data)
       setreceiverUserInfo(data.otherUser)
     } catch (err) {
       console.error("Error fetching messages", err)
+    }
+  }
+
+  async function sendMessage(userId: string, otherUserId: string | string[] | undefined, message: string) {
+    try {
+      const response = await fetch("http://192.168.0.148:3000/addMessagesToDB", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, otherUserId, message }),
+      })
+      const data = await response.json()
+      console.log(data)
+    } catch (err) {
+      console.error("ERROR FETCHING MESSAGES", err)
     }
   }
 
@@ -142,7 +160,9 @@ export default function Messaging(): React.JSX.Element {
               item.senderId === userId || item.senderId === otherUserId ?
                 <View>
                   <Text className={item.receiverId !== userId ? "text-green-600" : "text-gray-600"}>{item.message}</Text>
-                </View> : <View></View>
+                </View>
+                :
+                <View></View>
             )}
           />
         </View>
@@ -162,6 +182,7 @@ export default function Messaging(): React.JSX.Element {
             </View>
             <TouchableOpacity className="rounded-full justify-center bg-green-500" onPress={() => {
               setUserMessage("")
+              sendMessage(userId ?? "", otherUserId, userMessage ?? "")
               socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
                 setAllMessages(prevMessages =>
                   [...prevMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])

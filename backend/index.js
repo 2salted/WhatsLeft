@@ -51,8 +51,10 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", (req) => {
     console.log("request", req)
+
     const otherUserSocketId = socketCache.get(req.receiverId)
     const senderUserSocketId = socketCache.get(req.senderId)
+
     io.to(senderUserSocketId).emit("newMessage", req);
     io.to(otherUserSocketId).emit("newMessage", req);
   });
@@ -76,19 +78,59 @@ else {
   httpServer.listen(8000, "192.168.0.148", () => console.log(`Development Server now live at http://192.168.0.148:${8000}`))
 }
 
+app.post("/addMessagesToDB", async (req, res) => {
+  try {
+    const clerkId = req.body.userId;
+    const otherClerkId = req.body.otherUserId;
+    const message = req.body.message;
+
+    const conversation = await client
+      .db("whatsleft")
+      .collection("conversations")
+      .findOne({ users: { $all: [clerkId, otherClerkId] } });
+
+    if (!conversation) {
+      console.error("conversation not found")
+    } else {
+      const updateResult = await client
+        .db("whatsleft")
+        .collection("conversations")
+        .updateOne(
+          { _id: conversation._id },
+          { $push: { message: { sender: clerkId, message: message, timestamp: new Date() } } }
+        );
+      console.log("Message added to existing conversation", updateResult);
+    }
+    res.json({ response: "Message added successfully" });
+  } catch (err) {
+    console.error("Error", err);
+    res.status(500).send("An error occurred");
+  }
+});
+
 app.post('/dms', async (req, res) => {
   try {
     const clerkId = req.body.userId
     const otherClerkId = req.body.otherUserId
+
     const searchResult = await client
       .db("whatsleft")
       .collection("conversations")
       .findOne({ users: { $all: [clerkId, otherClerkId] } })
     const findOtherUser = await client.db("whatsleft").collection("users").findOne({ clerkId: otherClerkId });
+
     if (searchResult.messages) {
-      res.json({ otherUser: findOtherUser, messages: [""] })
+
+      const lastMessages = await client
+        .db("whatsleft")
+        .collection("conversations")
+        .find({ "messages": { $exists: true, $ne: [] } })
+        .sort({ "messages.timestamp": -1 })
+        .limit(15)
+        .toArray();
+      res.json({ otherUser: findOtherUser, messages: lastMessages })
     } else {
-      res.json({ otherUser: findOtherUser, messages: [""] })
+      res.json({ otherUser: findOtherUser, messages: ["NOTHING HERE"] })
     }
   } catch {
   }
