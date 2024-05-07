@@ -113,6 +113,7 @@ export default function Tab(): React.JSX.Element {
           <View style={{ width: '100%', height: '100%' }}>
             <FlatList
               data={matchedSearchQuery}
+              keyExtractor={(_, index) => index.toString()}
               renderItem={({ item }: { item: User; }) => (
                 <Pressable onPress={() => {
                   router.push(`/${item.clerkId}`)

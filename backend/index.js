@@ -46,15 +46,28 @@ io.on("connection", (socket) => {
   socket.on("userId", (userId) => {
     socketCache.set(userId, socket.id);
     console.log(socketCache);
-    console.log(socketCache);
   })
   console.log(`A user connected. Socket ID: ${socket.id}`);
 
   socket.on("sendMessage", (req) => {
     console.log("request", req)
     const otherUserSocketId = socketCache.get(req.receiverId)
-    socket.to(otherUserSocketId).emit("newMessage", req);
+    const senderUserSocketId = socketCache.get(req.senderId)
+    console.log(otherUserSocketId, senderUserSocketId)
+    io.to(senderUserSocketId).emit("newMessage", req);
+    io.to(otherUserSocketId).emit("newMessage", req);
   });
+});
+
+socket.on("disconnect", () => {
+  console.log(`User disconnected. Socket ID: ${socket.id}`);
+
+  socketCache.forEach((value, key) => {
+    if (value === socket.id) {
+      socketCache.delete(key);
+    }
+  });
+  console.log(socketCache);
 });
 
 if (8000) {
