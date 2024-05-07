@@ -57,7 +57,7 @@ export default function Messaging(): React.JSX.Element {
     }
   }, []);
 
-  async function get15Messages(userId: string, otherUserId: any) {
+  async function get15Messages(userId: string, otherUserId: string | string[] | undefined) {
     try {
       const response = await fetch("http://192.168.0.148:3000/dms", {
         method: "POST",
@@ -73,7 +73,7 @@ export default function Messaging(): React.JSX.Element {
     }
   }
 
-  const checkForImage = async (userId: any) => {
+  const checkForImage = async (userId: string | string[] | undefined) => {
     try {
       const response = await fetch("http://192.168.0.148:3000/findImage", {
         method: "POST",
@@ -160,10 +160,11 @@ export default function Messaging(): React.JSX.Element {
                 onChangeText={(message) => setUserMessage(message)}
               />
             </View>
-            <TouchableOpacity className="rounded-full justify-center bg-green-500" onPressOut={() => {
-              socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: any) => {
-                setAllMessages(prevMessages => [...prevMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])
-                setUserMessage("");
+            <TouchableOpacity className="rounded-full justify-center bg-green-500" onPress={() => {
+              setUserMessage("")
+              socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
+                setAllMessages(prevMessages =>
+                  [...prevMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])
               });
             }}>
               <Ionicons name="send" size={20} color="black" style={{ marginRight: 6, marginLeft: 10 }} />
