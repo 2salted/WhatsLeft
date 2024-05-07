@@ -26,9 +26,6 @@ export default function Messaging(): React.JSX.Element {
   const [socketID, setSocketID] = useState<string | undefined>();
   const [isConnected, setIsConnected] = useState(false);
 
-  console.log("socketId", socketID);
-  console.log("is connected", isConnected);
-
   useEffect(() => {
     checkForImage(otherUserId)
     get15Messages(userId ?? "", otherUserId)
@@ -51,7 +48,6 @@ export default function Messaging(): React.JSX.Element {
     socket.current.on("connect", onConnect);
     socket.current.on("disconnect", onDisconnect);
     socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
-      console.log(message)
       setAllMessages(prevMessages => [...prevMessages, message])
     })
 
@@ -142,11 +138,12 @@ export default function Messaging(): React.JSX.Element {
           <FlatList
             data={allMessages}
             keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) =>
-              <View>
-                <Text className={item.receiverId !== userId ? "text-green-600" : "text-gray-600"}>{item.message}</Text>
-              </View>
-            }
+            renderItem={({ item }) => (
+              item.senderId === userId || item.senderId === otherUserId ?
+                <View>
+                  <Text className={item.receiverId !== userId ? "text-green-600" : "text-gray-600"}>{item.message}</Text>
+                </View> : <View></View>
+            )}
           />
         </View>
       </SafeAreaView>

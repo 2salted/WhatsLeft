@@ -53,13 +53,12 @@ io.on("connection", (socket) => {
     console.log("request", req)
     const otherUserSocketId = socketCache.get(req.receiverId)
     const senderUserSocketId = socketCache.get(req.senderId)
-    console.log(otherUserSocketId, senderUserSocketId)
     io.to(senderUserSocketId).emit("newMessage", req);
     io.to(otherUserSocketId).emit("newMessage", req);
   });
 });
 
-socket.on("disconnect", () => {
+io.on("disconnect", (socket) => {
   console.log(`User disconnected. Socket ID: ${socket.id}`);
 
   socketCache.forEach((value, key) => {
