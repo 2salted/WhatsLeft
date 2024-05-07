@@ -21,7 +21,7 @@ export default function Messaging(): React.JSX.Element {
   const [image, setImage] = useState<string>("")
   const [receiverUserInfo, setreceiverUserInfo] = useState<User>()
   const [messages, setMessages] = useState<[{}]>([{}])
-  const [userMessage, setUserMessage] = useState<string>();
+  const [userMessage, setUserMessage] = useState<string>("");
   const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
   const socket = useRef<Socket | null>(null)
   const [socketID, setSocketID] = useState<string | undefined>();
@@ -181,12 +181,14 @@ export default function Messaging(): React.JSX.Element {
               />
             </View>
             <TouchableOpacity className="rounded-full justify-center bg-green-500" onPress={() => {
-              setUserMessage("")
-              sendMessage(userId ?? "", otherUserId, userMessage ?? "")
-              socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
-                setAllMessages(prevMessages =>
-                  [...prevMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])
-              });
+              if (userMessage.trim() !== "") {
+                setUserMessage("")
+                sendMessage(userId ?? "", otherUserId, userMessage ?? "")
+                socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
+                  setAllMessages(prevMessages =>
+                    [...prevMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])
+                });
+              }
             }}>
               <Ionicons name="send" size={20} color="black" style={{ marginRight: 6, marginLeft: 10 }} />
             </TouchableOpacity>
