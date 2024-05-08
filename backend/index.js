@@ -97,7 +97,7 @@ app.post("/addMessagesToDB", async (req, res) => {
         .collection("conversations")
         .updateOne(
           { _id: conversation._id },
-          { $push: { message: { sender: clerkId, message: message, timestamp: new Date() } } }
+          { $push: { messages: { senderId: clerkId, message: message, timestamp: new Date() } } }
         );
       console.log("Message added to existing conversation", updateResult);
     }
@@ -118,20 +118,7 @@ app.post('/dms', async (req, res) => {
       .collection("conversations")
       .findOne({ users: { $all: [clerkId, otherClerkId] } })
     const findOtherUser = await client.db("whatsleft").collection("users").findOne({ clerkId: otherClerkId });
-
-    if (searchResult.messages) {
-
-      const lastMessages = await client
-        .db("whatsleft")
-        .collection("conversations")
-        .find({ "messages": { $exists: true, $ne: [] } })
-        .sort({ "messages.timestamp": -1 })
-        .limit(15)
-        .toArray();
-      res.json({ otherUser: findOtherUser, messages: lastMessages })
-    } else {
-      res.json({ otherUser: findOtherUser, messages: ["NOTHING HERE"] })
-    }
+    res.json({ otherUser: findOtherUser, messages: searchResult?.messages })
   } catch {
   }
 })
@@ -330,10 +317,6 @@ async function createUser(client, newUser) {
     .insertOne(newUser);
   console.log(`New user created with the following id: ${result.insertedId}`);
 }
-
-app.post("/fetchContacts", async (req, res) => {
-  const clerkId = req.body.clerkId;
-});
 
 app.listen(port, async () => {
   try {

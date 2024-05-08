@@ -29,7 +29,7 @@ export default function Messaging(): React.JSX.Element {
 
   useEffect(() => {
     checkForImage(otherUserId)
-    get15Messages(userId ?? "", otherUserId)
+    getMessages(userId ?? "", otherUserId)
     socket.current = io(`http://192.168.0.148:${8000}`)
     const onConnect = () => {
       console.log(`Connected to server! Socket ID: ${socket.current?.id}`)
@@ -58,7 +58,7 @@ export default function Messaging(): React.JSX.Element {
     }
   }, []);
 
-  async function get15Messages(userId: string, otherUserId: string | string[] | undefined) {
+  async function getMessages(userId: string, otherUserId: string | string[] | undefined) {
     try {
       const response = await fetch("http://192.168.0.148:3000/dms", {
         method: "POST",
@@ -68,12 +68,14 @@ export default function Messaging(): React.JSX.Element {
         body: JSON.stringify({ userId, otherUserId }),
       })
       const data = await response.json()
-      setMessages(data)
+      setAllMessages(data.messages)
       setreceiverUserInfo(data.otherUser)
     } catch (err) {
       console.error("Error fetching messages", err)
     }
   }
+  console.log("messages", allMessages)
+  console.log("info", receiverUserInfo)
 
   async function sendMessage(userId: string, otherUserId: string | string[] | undefined, message: string) {
     try {
