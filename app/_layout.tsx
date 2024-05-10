@@ -18,14 +18,14 @@ export default function AppLayout(): React.JSX.Element {
   const tokenCache = {
     async getToken(key: string) {
       try {
-        return await SecureStore.getItemAsync(key);
+        return SecureStore.getItemAsync(key);
       } catch (err) {
         return null;
       }
     },
     async saveToken(key: string, value: string) {
       try {
-        return await SecureStore.setItemAsync(key, value);
+        return SecureStore.setItemAsync(key, value);
       } catch (err) {
         return;
       }
@@ -34,9 +34,8 @@ export default function AppLayout(): React.JSX.Element {
 
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={clerkApiKey!}>
-      <ExpoStatusBar hidden={false} translucent={false} style="light" />
       <SignedIn>
-        <ExpoStatusBar style="light" hidden={false} />
+        <ExpoStatusBar hidden={false} translucent={false} style="light" />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
@@ -66,7 +65,7 @@ export default function AppLayout(): React.JSX.Element {
         </Stack>
       </SignedIn>
       <SignedOut>
-        <ExpoStatusBar style="light" hidden={false} />
+        <ExpoStatusBar hidden={false} translucent={false} style="light" />
         {test === false ? (
           <SignUpScreen setTest={setTest} />
         ) : (
