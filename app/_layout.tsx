@@ -6,11 +6,11 @@ const clerkApiKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 import React from "react";
 import SignUpScreen from "@/components/SignUpScreen";
 import SignInScreen from "../components/SignInScreen";
-import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 import { View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import 'react-native-reanimated';
 
 export default function AppLayout(): React.JSX.Element {
   const [test, setTest] = React.useState<boolean>(false);
@@ -35,7 +35,6 @@ export default function AppLayout(): React.JSX.Element {
   return (
     <ClerkProvider publishableKey={clerkApiKey!}>
       <SignedIn>
-        <ExpoStatusBar hidden={false} translucent={false} style="light" />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
@@ -65,7 +64,6 @@ export default function AppLayout(): React.JSX.Element {
         </Stack>
       </SignedIn>
       <SignedOut>
-        <ExpoStatusBar hidden={false} translucent={false} style="light" />
         {test === false ? (
           <SignUpScreen setTest={setTest} />
         ) : (

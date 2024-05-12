@@ -51,6 +51,8 @@ export default function Messaging(): React.JSX.Element {
     socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
       setAllMessages(prevMessages => [...prevMessages, message])
     })
+    console.log("all messages:", allMessages)
+    console.log("messages", messages)
 
     return () => {
       socket.current?.off("connect", onConnect);
