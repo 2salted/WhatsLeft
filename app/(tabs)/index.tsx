@@ -28,7 +28,11 @@ export default function Tab(): React.JSX.Element {
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
-    return <View></View>
+    return (
+      <View className="bg-black flex-1">
+        <Text className="text-white">You are not logged in</Text>
+      </View>
+    )
   }
 
   const checkClerkIdExists = async (clerkId: string) => {

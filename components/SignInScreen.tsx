@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSignIn } from "@clerk/clerk-expo";
+import { useAuth, useSignIn } from "@clerk/clerk-expo";
 
 export default function SignInScreen({ setTest }: any) {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -29,9 +29,10 @@ export default function SignInScreen({ setTest }: any) {
       // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
     }
   };
+
   return (
     <SafeAreaView className="flex-1 bg-black items-center">
       <View className="w-11/12">

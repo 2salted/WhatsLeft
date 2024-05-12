@@ -33,7 +33,12 @@ export default function addUserModal(): React.JSX.Element {
   const { userId, isLoaded } = useAuth();
 
   if (!isLoaded || !userId) {
-    return <View />;
+    return (
+      <View className="bg-black flex-1">
+        <Text className="text-white">You are not logged in</Text>
+      </View>
+    )
+
   }
 
   async function createNewConvo(users: string[], id: string) {
