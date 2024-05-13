@@ -113,6 +113,8 @@ export default function Messaging(): React.JSX.Element {
     }
   };
 
+  console.log("messages", allMessages)
+
   let css = ""
   Platform.OS === "ios" ? css = "bg-neutral-700 text-white p-2 rounded-full border border-neutral-600" :
     css = "bg-neutral-700 text-white p-1 rounded-full border border-neutral-600"
@@ -166,16 +168,16 @@ export default function Messaging(): React.JSX.Element {
                 <View className="p-1">
                   {item.receiverId !== userId ? (
                     <View className="items-end pr-3">
-                      <View className="bg-green-700 rounded-lg w-auto">
-                        <Text className="text-white text-left px-2 pt-2">{item.message}</Text>
-                        <Text className="text-gray-300 text-right p-1 text-xs">1:30PM</Text>
+                      <View className="bg-green-700 rounded-lg w-auto px-1">
+                        <Text className="text-white text-base text-left pr-3 pl-2 pt-1">{item.message}</Text>
+                        <Text className="text-gray-300 text-right p-1 text-xs">{item.timestamp}</Text>
                       </View>
                     </View>
                   ) : (
                     <View className="items-start pl-3">
-                      <View className="bg-neutral-800 rounded-lg w-auto">
-                        <Text className="text-white text-left px-2 pt-2">{item.message}</Text>
-                        <Text className="text-neutral-500 text-right p-1 text-xs">1:30PM</Text>
+                      <View className="bg-neutral-800 rounded-lg w-auto px-1">
+                        <Text className="text-white text-base text-left pr-3 pl-2 pt-1">{item.message}</Text>
+                        <Text className="text-neutral-500 text-right p-1 text-xs">{item.timestamp}</Text>
                       </View>
                     </View>
                   )}
@@ -202,13 +204,15 @@ export default function Messaging(): React.JSX.Element {
             <TouchableOpacity className="rounded-full justify-center bg-green-500" onPress={() => {
               if (userMessage.trim() !== "") {
                 setUserMessage("")
+                let now = new Date()
                 sendMessage(userId ?? "", otherUserId, userMessage ?? "")
                 socket.current?.emit("sendMessage",
-                  { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
+                  {
+                    message: userMessage, senderId: userId, receiverId: otherUserId, timestamp: now.getHours() + ":" + now.getMinutes()
+                  }, (val: unknown) => {
                     setAllMessages((prevMessages: any) =>
                       [...prevMessages, {
                         message: userMessage ?? "",
-                        timestamp: new Date(),
                         senderId: userId as string,
                         receiverId: otherUserId as string
                       }])
