@@ -20,10 +20,8 @@ export default function Messaging(): React.JSX.Element {
   const otherUserId = userIdSecondObject.id
   const [image, setImage] = useState<string>("")
   const [receiverUserInfo, setReceiverUserInfo] = useState<User>()
-  const [messages, setMessages] = useState<[{}]>([{}])
   const [userMessage, setUserMessage] = useState<string>("");
-  const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>
-    ([{ message: "test", senderId: "test", receiverId: "test" }]);
+  const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
   const socket = useRef<Socket | null>(null)
   const [socketID, setSocketID] = useState<string | undefined>();
   const [isConnected, setIsConnected] = useState(false);
