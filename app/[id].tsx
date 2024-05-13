@@ -22,7 +22,8 @@ export default function Messaging(): React.JSX.Element {
   const [receiverUserInfo, setReceiverUserInfo] = useState<User>()
   const [messages, setMessages] = useState<[{}]>([{}])
   const [userMessage, setUserMessage] = useState<string>("");
-  const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
+  const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>
+    ([{ message: "test", senderId: "test", receiverId: "test" }]);
   const socket = useRef<Socket | null>(null)
   const [socketID, setSocketID] = useState<string | undefined>();
   const [isConnected, setIsConnected] = useState(false);
@@ -49,6 +50,7 @@ export default function Messaging(): React.JSX.Element {
     socket.current.on("connect", onConnect);
     socket.current.on("disconnect", onDisconnect);
     socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
+      setAllMessages(prev => [...prev, message])
     })
 
     return () => {
@@ -67,8 +69,14 @@ export default function Messaging(): React.JSX.Element {
         body: JSON.stringify({ userId, otherUserId }),
       })
       const data = await response.json()
-      setAllMessages(data.messages)
-      setReceiverUserInfo(data.otherUser)
+      if (data.messages) {
+        setAllMessages(data.messages)
+      } else {
+        setAllMessages([])
+      }
+      if (data.otherUser) {
+        setReceiverUserInfo(data.otherUser)
+      }
     } catch (err) {
       console.error("Error fetching messages", err)
     }
