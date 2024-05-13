@@ -97,7 +97,7 @@ app.post("/addMessagesToDB", async (req, res) => {
         .collection("conversations")
         .updateOne(
           { _id: conversation._id },
-          { $push: { messages: { senderId: clerkId, message: message, timestamp: new Date() } } }
+          { $push: { messages: { senderId: clerkId, receiverId: otherClerkId, message: message, timestamp: new Date() } } }
         );
       console.log("Message added to existing conversation", updateResult);
     }

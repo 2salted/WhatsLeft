@@ -21,7 +21,7 @@ export default function Messaging(): React.JSX.Element {
   const [image, setImage] = useState<string>("")
   const [receiverUserInfo, setReceiverUserInfo] = useState<User>()
   const [userMessage, setUserMessage] = useState<string>("");
-  const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
+  const [allMessages, setAllMessages] = useState<{ message: string, timestamp: string, senderId: string, receiverId: string }[]>([]);
   const socket = useRef<Socket | null>(null)
   const [socketID, setSocketID] = useState<string | undefined>();
   const [isConnected, setIsConnected] = useState(false);
@@ -47,7 +47,7 @@ export default function Messaging(): React.JSX.Element {
 
     socket.current.on("connect", onConnect);
     socket.current.on("disconnect", onDisconnect);
-    socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
+    socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string, timestamp: string }) => {
       setAllMessages(prev => [...prev, message])
     })
 
@@ -157,14 +157,28 @@ export default function Messaging(): React.JSX.Element {
             headerShadowVisible: false,
           }}
         />
-        <View className="flex-1 items-center">
+        <View className="flex-1">
           <FlatList
             data={allMessages}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item }) => (
               item.senderId === userId || item.senderId === otherUserId ?
-                <View>
-                  <Text className={item.receiverId !== userId ? "text-green-600" : "text-gray-600"}>{item.message}</Text>
+                <View className="p-1">
+                  {item.receiverId !== userId ? (
+                    <View className="items-end pr-3">
+                      <View className="bg-green-700 rounded-lg w-auto">
+                        <Text className="text-white text-left px-2 pt-2">{item.message}</Text>
+                        <Text className="text-gray-300 text-right p-1 text-xs">1:30PM</Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <View className="items-start pl-3">
+                      <View className="bg-neutral-800 rounded-lg w-auto">
+                        <Text className="text-white text-left px-2 pt-2">{item.message}</Text>
+                        <Text className="text-neutral-500 text-right p-1 text-xs">1:30PM</Text>
+                      </View>
+                    </View>
+                  )}
                 </View>
                 :
                 <View></View>
@@ -191,9 +205,10 @@ export default function Messaging(): React.JSX.Element {
                 sendMessage(userId ?? "", otherUserId, userMessage ?? "")
                 socket.current?.emit("sendMessage",
                   { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
-                    setAllMessages((prevMessages) =>
+                    setAllMessages((prevMessages: any) =>
                       [...prevMessages, {
                         message: userMessage ?? "",
+                        timestamp: new Date(),
                         senderId: userId as string,
                         receiverId: otherUserId as string
                       }])
