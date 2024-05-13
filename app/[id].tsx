@@ -19,7 +19,7 @@ export default function Messaging(): React.JSX.Element {
   const userIdSecondObject = useLocalSearchParams()
   const otherUserId = userIdSecondObject.id
   const [image, setImage] = useState<string>("")
-  const [receiverUserInfo, setreceiverUserInfo] = useState<User>()
+  const [receiverUserInfo, setReceiverUserInfo] = useState<User>()
   const [messages, setMessages] = useState<[{}]>([{}])
   const [userMessage, setUserMessage] = useState<string>("");
   const [allMessages, setAllMessages] = useState<{ message: string, senderId: string, receiverId: string }[]>([]);
@@ -49,10 +49,7 @@ export default function Messaging(): React.JSX.Element {
     socket.current.on("connect", onConnect);
     socket.current.on("disconnect", onDisconnect);
     socket.current.on("newMessage", (message: { message: string, senderId: string, receiverId: string }) => {
-      setAllMessages(prevMessages => [...prevMessages, message])
     })
-    console.log("all messages:", allMessages)
-    console.log("messages", messages)
 
     return () => {
       socket.current?.off("connect", onConnect);
@@ -71,13 +68,11 @@ export default function Messaging(): React.JSX.Element {
       })
       const data = await response.json()
       setAllMessages(data.messages)
-      setreceiverUserInfo(data.otherUser)
+      setReceiverUserInfo(data.otherUser)
     } catch (err) {
       console.error("Error fetching messages", err)
     }
   }
-  console.log("messages", allMessages)
-  console.log("info", receiverUserInfo)
 
   async function sendMessage(userId: string, otherUserId: string | string[] | undefined, message: string) {
     try {
@@ -188,10 +183,15 @@ export default function Messaging(): React.JSX.Element {
               if (userMessage.trim() !== "") {
                 setUserMessage("")
                 sendMessage(userId ?? "", otherUserId, userMessage ?? "")
-                socket.current?.emit("sendMessage", { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
-                  setAllMessages(prevMessages =>
-                    [...prevMessages, { message: userMessage ?? "", senderId: userId as string, receiverId: otherUserId as string }])
-                });
+                socket.current?.emit("sendMessage",
+                  { message: userMessage, senderId: userId, receiverId: otherUserId }, (val: unknown) => {
+                    setAllMessages((prevMessages) =>
+                      [...prevMessages, {
+                        message: userMessage ?? "",
+                        senderId: userId as string,
+                        receiverId: otherUserId as string
+                      }])
+                  });
               }
             }}>
               <Ionicons name="send" size={20} color="black" style={{ marginRight: 6, marginLeft: 10 }} />

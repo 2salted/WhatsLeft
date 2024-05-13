@@ -33,7 +33,7 @@ export default function AppLayout(): React.JSX.Element {
   };
 
   return (
-    <ClerkProvider publishableKey={clerkApiKey!}>
+    <ClerkProvider tokenCache={tokenCache} publishableKey={clerkApiKey!}>
       <SignedIn>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
