@@ -55,6 +55,7 @@ export default function Tab() {
     }}>
       <Text className='text-gray-50 text-4xl font-bold px-5'>Calls</Text>
       <View className="items-center py-5">
+        <Text className='text-white'>Not implemented yet..</Text>
       </View>
     </SafeAreaView>
   );

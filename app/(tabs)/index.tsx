@@ -135,13 +135,10 @@ export default function Tab(): React.JSX.Element {
                       }
                     </View>
                     <View className="px-3">
-                      <View>
+                      <View className="pt-3">
                         <Text className="text-white capitalize font-bold text-base">
                           {item.firstName + " " + item.lastName}
                         </Text>
-                      </View>
-                      <View>
-                        <Text className="text-white">Hello</Text>
                       </View>
                     </View>
                   </View>
