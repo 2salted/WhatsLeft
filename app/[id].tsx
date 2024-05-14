@@ -113,8 +113,6 @@ export default function Messaging(): React.JSX.Element {
     }
   };
 
-  console.log("messages", allMessages)
-
   let css = ""
   Platform.OS === "ios" ? css = "bg-neutral-700 text-white p-2 rounded-full border border-neutral-600" :
     css = "bg-neutral-700 text-white p-1 rounded-full border border-neutral-600"
