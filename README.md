@@ -16,5 +16,7 @@ The development stack used to make this project was:
 * [Clerk](https://clerk.com/) for user authentication<br>
 * [Socket.io](https://socket.io/) for websockets and realtime messaging<br>
 * [MongoDB](https://www.mongodb.com/) for user database<br>
+* [MinIO](https://min.io/) for High-Performance Object Storage system (image upload)<br>
 * [ExpressJS](https://expressjs.com/) for backend framework<br>
+* [NodeJS](https://nodejs.org/en) for running backend and frontend servers in dev<br>
 * [Github](https://github.com/) for version control<br>
