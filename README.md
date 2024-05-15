@@ -20,3 +20,8 @@ The development stack used to make this project was:
 * [ExpressJS](https://expressjs.com/) for backend framework<br>
 * [NodeJS](https://nodejs.org/en) for running backend and frontend servers in dev<br>
 * [Github](https://github.com/) for version control<br>
+
+## What I learned
+1. I learned the basics HTTP request and response with mongoDB between my frontend and backend<br>
+2. I learned how to work with websockets and realtime messaging<br>
+3. I learned how to work with a non-relational document database<br>
