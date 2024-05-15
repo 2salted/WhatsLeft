@@ -13,6 +13,7 @@ The development stack used to make this project was:
 * [Native Wind](https://www.nativewind.dev/) for CSS styling<br>
 * [Expo](https://expo.dev/) for building environment, bundling TS & routing<br>
 * [Clerk](https://clerk.com/) for user authentication<br>
+* [Socket.io](https://socket.io/images/logo-dark.svg) for websockets and realtime messaging <br>
 * [MongoDB](https://www.mongodb.com/) for user database<br>
 * [ExpressJS](https://expressjs.com/) for backend framework<br>
 * [Github](https://github.com/) for version control<br>
