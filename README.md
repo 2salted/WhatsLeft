@@ -22,7 +22,11 @@ The development stack used to make this project was:
 * [Github](https://github.com/) for version control<br>
 
 ## What I learned
-1. I learned the basics HTTP request and response with mongoDB between my frontend and backend(express and node)<br>
+1. I learned the basics HTTP request and response between my frontend and backend(express and node)<br>
 2. I learned how to work with websockets and realtime messaging(socket.io)<br>
 3. I learned how to work with a non-relational document database (MongoDB)<br>
 4. I learned how file based routing works (expo router)<br>
+5. I learned the basics of how to turn base64 raw image data into an array buffer<br>
+6. I learned the basics of asynchronous javascript mostly for fetching data<br>
+and I obviously learned much more but this is what really stuck out while making this project!
+
