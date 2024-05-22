@@ -30,3 +30,8 @@ The development stack used to make this project was:
 6. I learned the basics of asynchronous javascript mostly for fetching data<br>
 and I obviously learned much more but this is what really stuck out while making this project!
 
+## Challenges I ran into
+The greatest challenge I ran into was when trying to do image upload to my object storage system I had to<br>
+convert the images raw base64 data into an octet-binary array buffer so that it could be properly uploaded to minIO. After that I<br>
+then had to make sure it gets a full non corrupted image array buffer that can be uploaded to minIO, wait for the URL response from minIO and then store<br>
+the minIO URL inside mongoDB without interupion! which is why if you look at the image upload test video it takes quite a bit of time.
