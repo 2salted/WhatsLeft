@@ -46,4 +46,9 @@ would be on any other device or code editor, anyways lets get started!
 3. now while still being in the root directory run "npm install" or "npm i"
 4. create a .env file in the root dir using "touch .env" command
 5. using your text editor open the .env file, for me it's "nvim .env"
-6. inside the .env create a variable called "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=" then paste your * [clerk publishable key](https://clerk.com/)
+6. inside the .env create a variable called "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=" then paste your [clerk publishable key](https://clerk.com/)
+7. create a second variable "IPV4=" and then paste your actual ipv4, for example mine could be 192.0.2.1
+8. now go into the backend folder using "cd backend/" and create another .env file and go into it ("nvim .env")
+9. now create "MONGODB_CONNECTION=" variable and paste your mongodb connection link key also put the same ipv4 variable as the last env file
+10. copy paste the following variables: MINIO_SECRET_KEY=minioadmin, MINIO_ACCESS_KEY=minioadmin, MINIO_DEFAULT_BUCKET=test-bucket, MINIO_ENDPOINT=127.0.0.1:9000, MINIO_ROOT_USER=minioadmin, MINIO_ROOT_PASSWORD=minioadmin
+11. 
