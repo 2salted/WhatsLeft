@@ -28,6 +28,7 @@ The development stack used to make this project was:
 4. I learned how file based routing works (expo router)<br>
 5. I learned the basics of how to turn base64 raw image data into an array buffer<br>
 6. I learned the basics of asynchronous javascript mostly for fetching data<br>
+7. I learned how to use javascripts in built hashmap functionality for the first time<br>
 and I obviously learned much more but this is what really stuck out while making this project!
 
 ## Challenges I ran into
