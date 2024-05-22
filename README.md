@@ -51,4 +51,4 @@ would be on any other device or code editor, anyways lets get started!
 8. now go into the backend folder using "cd backend/" and create another .env file and go into it ("nvim .env")
 9. now create "MONGODB_CONNECTION=" variable and paste your mongodb connection link key also put the same ipv4 variable as the last env file
 10. copy paste the following variables: MINIO_SECRET_KEY=minioadmin, MINIO_ACCESS_KEY=minioadmin, MINIO_DEFAULT_BUCKET=test-bucket, MINIO_ENDPOINT=127.0.0.1:9000, MINIO_ROOT_USER=minioadmin, MINIO_ROOT_PASSWORD=minioadmin
-11. 
+11. while you are still inside the backend folder run "npm install" or "npm i"
